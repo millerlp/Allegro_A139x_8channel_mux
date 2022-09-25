@@ -88,9 +88,19 @@ MaximDS3231 ds3231(1);
 /** End [ds3231] */
 
 // ==========================================================================
-//  Everlight ALS-PT19 Ambient Light Sensor
+//  Allegro A139x Hall effect sensor
+//
 // ==========================================================================
-/** Start [allegroa139x] */
+/** Start [allegroa139x] 
+ *  The Allegro A1391, A1393, A1395 Hall effect sensors put out a ratiometric
+ *  voltage signal that can be read by the analog-to-digital convertor on a 
+ *  Mayfly board or other microcontroller. When no magnetic field is present 
+ *  the signal will sit at mid-scale (around 512 on a 10-bit 0-1023 ADC scale)
+ *  and when a magnet is nearby the signal will move towards 0 or 1023 depending
+ *  on the polarity of the magnet. For this example, we just return the raw
+ *  ADC value (0-1023). 
+
+*/
 #include <Allegro_A139x.h> // https://github.com/millerlp/Allegro_A139x_Hall_effect
 
 
@@ -107,7 +117,7 @@ AllegroA139x hall1(hallPower, hallData, hallNumberReadings);
 Variable* hall1Count = new AllegroA139x_Counts(
     &hall1, "12345678-abcd-1234-ef00-1234567890ab");
 
-/** End [everlight_alspt19] */
+/** End [allegroa139x] */
 
 // ==========================================================================
 //    Settings for Additional Sensors
