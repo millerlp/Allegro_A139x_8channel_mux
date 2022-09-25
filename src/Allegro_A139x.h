@@ -18,16 +18,16 @@
  * @tableofcontents
  * @m_footernavigation
  *
- * @section sensor_alspt19_notes Quick Notes
- * - A simple analog current sensor
- * - Requires a 2.5 - 5.5V power source
+ * @section sensor_allegroa139x_notes Quick Notes
+ * - A simple analog Hall effect sensor
+ * - Requires a 2.5 - 3.5V power source
  *
- * @section sensor_alspt19_datasheet Sensor Datasheet
- * [Datasheet](https://github.com/EnviroDIY/ModularSensors/wiki/Sensor-Datasheets/Everlight-ALS-PT19.pdf)
+ * @section sensor_allegroa139x_datasheet Sensor Datasheet
+ * [Datasheet]()
  *
- * @section sensor_alspt19_ctor Sensor Constructors
- * {{ @ref EverlightALSPT19::EverlightALSPT19(uint8_t) }}
- * {{ @ref EverlightALSPT19::EverlightALSPT19(int8_t, int8_t, float, float, uint8_t) }}
+ * @section sensor_allegroa139x_ctor Sensor Constructors
+ * {{ @ref AllegroA139x::AllegroA139x(uint8_t) }}
+ * {{ @ref AllegroA139x::AllegroA139x(int8_t, int8_t, uint8_t) }}
  *
  * @section sensor_alspt19_examples Example Code
  *
@@ -67,7 +67,7 @@
 #define ALLEGROA139X_NUM_VARIABLES 1
 /// @brief Sensor::_incCalcValues; we don't calculate any variables
 #define ALLEGROA139X_INC_CALC_VARIABLES 0
-/// @brief The power pin for the A139x 
+/// @brief The power pin for the A139x, -1 if always on 
 #define MAYFLY_ALLEGROA139X_POWER_PIN -1
 /// @brief The data pin for the A139x on the EnviroDIY Mayfly v1.x
 #define MAYFLY_ALLEGROA139X_DATA_PIN A3
@@ -83,7 +83,7 @@
  * necessary.
  */
 #define ALLEGROA139X_ADC_RESOLUTION 10
-#endif  // ALLEBROA139X_ADC_RESOLUTION
+#endif  // ALLEGROA139X_ADC_RESOLUTION
 /// @brief The maximum possible value of the ADC - one less than the resolution
 /// shifted up one bit.
 #define ALLEGROA139X_ADC_MAX ((1 << ALLEGROA139X_ADC_RESOLUTION) - 1)
@@ -159,12 +159,12 @@
 /**@}*/
 
 /**
- * @anchor sensor_allegroA139x_voltage
- * @name Voltage
- * The voltage variable from an Allegro A139x Hall effect sensor
- * - Range is dependent on supply voltage 
+ * @anchor sensor_allegroA139x_counts
+ * @name Counts
+ * The Counts variable from an Allegro A139x Hall effect sensor
+ * - Range is dependent on ADC resolution (default 10 bits, 0-1023) 
  *
- * {{ @ref AllegroA139x_Voltage::AllegroA139x_Voltage }}
+ * {{ @ref AllegroA139x_Counts::AllegroA139x_Counts }}
  */
 /**@{*/
 /**
@@ -174,50 +174,48 @@
  * resistor, but for simplicity we will use 3, which is an appropriate value for
  * the Mayfly.
  */
-#define ALLEGROA139X_VOLTAGE_RESOLUTION 3
-/// @brief Sensor variable number; current is stored in sensorValues[0].
-#define ALLEGROA139X_VOLTAGE_VAR_NUM 0
+#define ALLEGROA139X_COUNTS_RESOLUTION 3
+/// @brief Sensor variable number; raw ADC count is stored in sensorValues[0].
+#define ALLEGROA139X_COUNTS_VAR_NUM 0
 /// @brief Variable name in
 /// [ODM2 controlled vocabulary](http://vocabulary.odm2.org/variablename/);
 /// "electricCurrent"
-#define ALLEGROA139X_VOLTAGE_VAR_NAME "voltage"
+#define ALLEGROA139X_COUNTS_VAR_NAME "counts"
 /// @brief Variable unit name in
 /// [ODM2 controlled vocabulary](http://vocabulary.odm2.org/units/);
 /// "microampere"
-#define ALLEGROA139X_VOLTAGE_UNIT_NAME "volt"
-/// @brief Default variable short code; "ALLEGROA139XVoltage"
-#define ALLEGROA139X_VOLTAGE_DEFAULT_CODE "ALLEGROA139XVoltage"
+#define ALLEGROA139X_COUNTS_UNIT_NAME "count"
+/// @brief Default variable short code; "AllegroA139xCounts"
+#define ALLEGROA139X_COUNTS_DEFAULT_CODE "AllegroA139xCounts"
 /**@}*/
 
-// TODO: Restart here adapting to Allegro
+// 
 /* clang-format off */
 /**
  * @brief The Sensor sub-class for the [Everlight ALS-PT19](@ref sensor_alspt19).
  */
 /* clang-format on */
-class EverlightALSPT19 : public Sensor {
+class AllegroA139x : public Sensor {
  public:
     /**
-     * @brief Construct a new EverlightALSPT19 object with custom supply voltage
-     * and loading resistor values.
+     * @brief Construct a new AllegroA139x object with custom supply voltage
+     * 
      *
-     * @param powerPin The pin on the mcu controlling power to the AOSong
-     * ALS-PT19.  Use -1 if it is continuously powered.
-     * - The ALS-PT19 requires a 2.5 - 5.5V power source
-     * @param dataPin The processor ADC port pin to read the voltage from the EC
-     * probe.  Not all processor pins can be used as analog pins.  Those usable
+     * @param powerPin The pin on the mcu controlling power to the Allegro A139x
+     *   Use -1 if it is continuously powered.
+     * - The A1395 requires a 2.5 - 3.5V power source
+     * @param dataPin The processor ADC port pin to read the voltage from the
+     * sensor.  Not all processor pins can be used as analog pins.  Those usable
      * as analog pins generally are numbered with an "A" in front of the number
      * - ie, A1.
-     * @param supplyVoltage The power supply voltage (in volts) of the ALS-PT19.
-     * @param loadResistor The size of the loading resistor, in kilaohms (kΩ).
      * @param measurementsToAverage The number of measurements to take and
      * average before giving a "final" result from the sensor; optional with a
      * default value of 10.
      */
-    EverlightALSPT19(int8_t powerPin, int8_t dataPin, float supplyVoltage,
-                     float loadResistor, uint8_t measurementsToAverage = 10);
+    AllegroA139x(int8_t powerPin, int8_t dataPin,
+                    uint8_t measurementsToAverage = 10);
     /**
-     * @brief Construct a new EverlightALSPT19 object with pins and resistors
+     * @brief Construct a new AllegroA139x object with pins 
      * for the EnviroDIY Mayfly 1.x.
      *
      * This is a short-cut constructor to help users of our own board so they
@@ -228,11 +226,11 @@ class EverlightALSPT19 : public Sensor {
      * average before giving a "final" result from the sensor; optional with a
      * default value of 10.
      */
-    explicit EverlightALSPT19(uint8_t measurementsToAverage = 10);
+    explicit AllegroA139x(uint8_t measurementsToAverage = 10);
     /**
-     * @brief Destroy the EverlightALSPT19 object - no action needed.
+     * @brief Destroy the AllegroA139x object - no action needed.
      */
-    ~EverlightALSPT19();
+    ~AllegroA139x();
 
     /**
      * @copydoc Sensor::addSingleMeasurementResult()
@@ -241,146 +239,59 @@ class EverlightALSPT19 : public Sensor {
 
  private:
     /**
-     * @brief The power supply voltage
+     * 
      */
-    float _supplyVoltage;
-    /**
-     * @brief The loading resistance
-     */
-    float _loadResistor;
+
 };
 
 
 /* clang-format off */
 /**
  * @brief The Variable sub-class used for the
- * [relative current output](@ref sensor_alspt19_voltage) from an
- * [Everlight ALS-PT19](@ref sensor_alspt19).
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
  */
 /* clang-format on */
-class EverlightALSPT19_Voltage : public Variable {
+class AllegroA139x_Counts : public Variable {
  public:
     /**
-     * @brief Construct a new EverlightALSPT19_Voltage object.
+     * @brief Construct a new AllegroA139x_Counts object.
      *
-     * @param parentSense The parent EverlightALSPT19 providing the result
+     * @param parentSense The parent AllegroA139x providing the result
      * values.
      * @param uuid A universally unique identifier (UUID or GUID) for the
      * variable; optional with the default value of an empty string.
      * @param varCode A short code to help identify the variable in files;
-     * optional with a default value of "ALSPT19Current".
+     * optional with a default value of "AllegroA139xCounts".
      */
-    explicit EverlightALSPT19_Voltage(
-        EverlightALSPT19* parentSense, const char* uuid = "",
-        const char* varCode = ALSPT19_VOLTAGE_DEFAULT_CODE)
-        : Variable(parentSense, (const uint8_t)ALSPT19_VOLTAGE_VAR_NUM,
-                   (uint8_t)ALSPT19_VOLTAGE_RESOLUTION,
-                   ALSPT19_VOLTAGE_VAR_NAME, ALSPT19_VOLTAGE_UNIT_NAME, varCode,
+    explicit AllegroA139x_Counts(
+        AllegroA139x* parentSense, const char* uuid = "",
+        const char* varCode = ALLEGROA139X_COUNTS_DEFAULT_CODE)
+        : Variable(parentSense, (const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
+                   (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                   ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME, varCode,
                    uuid) {}
     /**
-     * @brief Construct a new EverlightALSPT19_Voltage object.
+     * @brief Construct a new AllegroA139x_Counts object.
      *
-     * @note This must be tied with a parent EverlightALSPT19 before it can be
+     * @note This must be tied with a parent AllegroA139x before it can be
      * used.
      */
-    EverlightALSPT19_Voltage()
-        : Variable((const uint8_t)ALSPT19_VOLTAGE_VAR_NUM,
-                   (uint8_t)ALSPT19_VOLTAGE_RESOLUTION,
-                   ALSPT19_VOLTAGE_VAR_NAME, ALSPT19_VOLTAGE_UNIT_NAME,
-                   ALSPT19_VOLTAGE_DEFAULT_CODE) {}
+    AllegroA139x_Counts()
+        : Variable((const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
+                   (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                   ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                   ALLEGROA139X_COUNTS_DEFAULT_CODE) {}
     /**
-     * @brief Destroy the EverlightALSPT19_Voltage object - no action needed.
+     * @brief Destroy the AllegroA139x_Counts object - no action needed.
      */
-    ~EverlightALSPT19_Voltage() {}
+    ~AllegroA139x_Counts() {}
 };
 
 
-/* clang-format off */
-/**
- * @brief The Variable sub-class used for the
- * [relative current output](@ref sensor_alspt19_current) from an
- * [Everlight ALS-PT19](@ref sensor_alspt19).
- */
-/* clang-format on */
-class EverlightALSPT19_Current : public Variable {
- public:
-    /**
-     * @brief Construct a new EverlightALSPT19_Current object.
-     *
-     * @param parentSense The parent EverlightALSPT19 providing the result
-     * values.
-     * @param uuid A universally unique identifier (UUID or GUID) for the
-     * variable; optional with the default value of an empty string.
-     * @param varCode A short code to help identify the variable in files;
-     * optional with a default value of "ALSPT19Current".
-     */
-    explicit EverlightALSPT19_Current(
-        EverlightALSPT19* parentSense, const char* uuid = "",
-        const char* varCode = ALSPT19_CURRENT_DEFAULT_CODE)
-        : Variable(parentSense, (const uint8_t)ALSPT19_CURRENT_VAR_NUM,
-                   (uint8_t)ALSPT19_CURRENT_RESOLUTION,
-                   ALSPT19_CURRENT_VAR_NAME, ALSPT19_CURRENT_UNIT_NAME, varCode,
-                   uuid) {}
-    /**
-     * @brief Construct a new EverlightALSPT19_Current object.
-     *
-     * @note This must be tied with a parent EverlightALSPT19 before it can be
-     * used.
-     */
-    EverlightALSPT19_Current()
-        : Variable((const uint8_t)ALSPT19_CURRENT_VAR_NUM,
-                   (uint8_t)ALSPT19_CURRENT_RESOLUTION,
-                   ALSPT19_CURRENT_VAR_NAME, ALSPT19_CURRENT_UNIT_NAME,
-                   ALSPT19_CURRENT_DEFAULT_CODE) {}
-    /**
-     * @brief Destroy the EverlightALSPT19_Current object - no action needed.
-     */
-    ~EverlightALSPT19_Current() {}
-};
 
 
-/* clang-format off */
-/**
- * @brief The Variable sub-class used for the
- * [calculated illuminance output](@ref sensor_alspt19_illuminance) from an
- * [Everlight ALS-PT19](@ref sensor_alspt19).
- */
-/* clang-format on */
-class EverlightALSPT19_Illuminance : public Variable {
- public:
-    /**
-     * @brief Construct a new EverlightALSPT19_Illuminance object.
-     *
-     * @param parentSense The parent EverlightALSPT19 providing the result
-     * values.
-     * @param uuid A universally unique identifier (UUID or GUID) for the
-     * variable; optional with the default value of an empty string.
-     * @param varCode A short code to help identify the variable in files;
-     * optional with a default value of "ALSPT19Lux".
-     */
-    explicit EverlightALSPT19_Illuminance(
-        EverlightALSPT19* parentSense, const char* uuid = "",
-        const char* varCode = ALSPT19_ILLUMINANCE_DEFAULT_CODE)
-        : Variable(parentSense, (const uint8_t)ALSPT19_ILLUMINANCE_VAR_NUM,
-                   (uint8_t)ALSPT19_ILLUMINANCE_RESOLUTION,
-                   ALSPT19_ILLUMINANCE_VAR_NAME, ALSPT19_ILLUMINANCE_UNIT_NAME,
-                   varCode, uuid) {}
-    /**
-     * @brief Construct a new EverlightALSPT19_Illuminance object.
-     *
-     * @note This must be tied with a parent EverlightALSPT19 before it can be
-     * used.
-     */
-    EverlightALSPT19_Illuminance()
-        : Variable((const uint8_t)ALSPT19_ILLUMINANCE_VAR_NUM,
-                   (uint8_t)ALSPT19_ILLUMINANCE_RESOLUTION,
-                   ALSPT19_ILLUMINANCE_VAR_NAME, ALSPT19_ILLUMINANCE_UNIT_NAME,
-                   ALSPT19_ILLUMINANCE_DEFAULT_CODE) {}
-    /**
-     * @brief Destroy the EverlightALSPT19_Illuminance object - no action
-     * needed.
-     */
-    ~EverlightALSPT19_Illuminance() {}
-};
+
+
 /**@}*/
-#endif  // SRC_SENSORS_EVERLIGHTALSPT19_H_
+#endif  // SRC_SENSORS_ALLEGROA139X_H_
