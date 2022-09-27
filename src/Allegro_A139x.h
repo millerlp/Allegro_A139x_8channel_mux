@@ -203,7 +203,12 @@ class AllegroA139x : public Sensor {
      *
      * @param powerPin The pin on the mcu controlling power to the Allegro A139x
      *   Use -1 if it is continuously powered.
-     * - The A1395 requires a 2.5 - 3.5V power source
+     * - The A139x sensors require a 2.5 - 3.5V power source
+     *  The Allegro A139x sensors have a SLEEP pin, which wakes the sensor when
+     *  pulled high, and puts it to sleep when pulled low. You may choose to connect
+     *  the sensor's Vcc pin to a constant 3V3 power source, and then connect the 
+     * SLEEP pin to one of the digital pins on the Mayfly to wake the sensor, and 
+     * name that digital pin here as the powerPin.
      * @param dataPin The processor ADC port pin to read the voltage from the
      * sensor.  Not all processor pins can be used as analog pins.  Those usable
      * as analog pins generally are numbered with an "A" in front of the number
