@@ -10,8 +10,7 @@
 #include "Allegro_A139x.h"
 
 
-// The constructor - because this is I2C, only need the power pin
-// This sensor has a set I2C address of 0XB8
+// The constructor 
 AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
                                    uint8_t measurementsToAverage)
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
