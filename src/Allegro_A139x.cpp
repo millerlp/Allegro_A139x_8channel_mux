@@ -41,7 +41,11 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
 
 // TODO: LPM: work out how to make a version of this function that can
 // use the multiplexers when requested, based on the private
-// variable _muxChannel being available. 
+// variable _muxChannel being available. This may require the
+// use of a #define macro to tell the library whether to run
+// multiplexer code or ignore it.
+// TODO: LPM: explore if having a startSingleMeasurement() function
+// in this library would be useful. 
 
     // Initialize float variables
     // float volt_val    = -9999;

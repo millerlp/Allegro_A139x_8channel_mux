@@ -279,6 +279,10 @@ class AllegroA139x : public Sensor {
      * @copydoc Sensor::addSingleMeasurementResult()
      */
     bool addSingleMeasurementResult(void) override;
+    // The 'override' identifier indicates that this library's
+    // version of addSingleMeasurementResult() should be used
+    // instead of the Base Sensor class's addSingleMeasurementResult()
+    // generic function. 
 
  private:
    uint8_t _muxChannel; 
