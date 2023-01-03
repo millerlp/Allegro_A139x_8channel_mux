@@ -281,6 +281,7 @@ class AllegroA139x : public Sensor {
     bool addSingleMeasurementResult(void) override;
 
  private:
+   uint8_t _muxChannel; 
     /**
      * 
      */

@@ -25,7 +25,8 @@ AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
-             measurementsToAverage){}
+             measurementsToAverage),
+             _muxChannel(muxChannel){}
 // Short-cut version for single sensor on default channel + settings             
 AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
@@ -37,6 +38,11 @@ AllegroA139x::~AllegroA139x() {}
 
 
 bool AllegroA139x::addSingleMeasurementResult(void) {
+
+// TODO: LPM: work out how to make a version of this function that can
+// use the multiplexers when requested, based on the private
+// variable _muxChannel being available. 
+
     // Initialize float variables
     // float volt_val    = -9999;
     // float current_val = -9999;
