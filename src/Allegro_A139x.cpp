@@ -11,12 +11,22 @@
 
 
 // The constructor 
+// For a single A139x Hall effect sensor connected to the Mayfly
 AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
                                    uint8_t measurementsToAverage)
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
              measurementsToAverage){}
+// Version with multiplexer channel variable included, for 8-channel adapter board             
+AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
+                    uint8_t measurementsToAverage = 4,
+                    uint8_t muxChannel)         
+    : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
+             ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
+             ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
+             measurementsToAverage){}
+// Short-cut version for single sensor on default channel + settings             
 AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,

@@ -1,5 +1,5 @@
 /**
- * Based off of EverlightALSPT19.h, modified by Luke Miller
+ * Based off of EverlightALSPT19.h, modified by Luke Miller to read Allegro A139x Hall effect sensors
  * @copyright 2017-2022 Stroud Water Research Center
  * Part of the EnviroDIY ModularSensors library for Arduino
  * @author Sara Geleskie Damiano <sdamiano@stroudcenter.org>
@@ -70,7 +70,7 @@
 /// @brief The power pin for the A139x, -1 if always on 
 #define MAYFLY_ALLEGROA139X_POWER_PIN -1
 /// @brief The data pin for the A139x on the EnviroDIY Mayfly v1.x
-#define MAYFLY_ALLEGROA139X_DATA_PIN A3
+#define MAYFLY_ALLEGROA139X_DATA_PIN A0
 /// @brief The supply voltage for the A139x on the EnviroDIY Mayfly v1.x
 #define MAYFLY_ALLEGROA139X_SUPPLY_VOLTAGE 3.3
 
@@ -192,13 +192,13 @@
 // 
 /* clang-format off */
 /**
- * @brief The Sensor sub-class for the [Everlight ALS-PT19](@ref sensor_alspt19).
+ * @brief The Sensor sub-class for the AllegroA139x Hall effect sensor.
  */
 /* clang-format on */
 class AllegroA139x : public Sensor {
  public:
     /**
-     * @brief Construct a new AllegroA139x object with custom supply voltage
+     * @brief Construct a new AllegroA139x object to read one sensor
      * 
      *
      * @param powerPin The pin on the mcu controlling power to the Allegro A139x
@@ -219,6 +219,44 @@ class AllegroA139x : public Sensor {
      */
     AllegroA139x(int8_t powerPin, int8_t dataPin,
                     uint8_t measurementsToAverage = 10);
+
+    /**
+     * @brief Construct a new AllegroA139x object for use with the 8-channel Mayfly adapter board
+     * 
+     * This is a constructor for a Hall effect sensor object, when used with an 8-channel
+     * adapter board on the Mayfly v1.1. The adapter board uses the Mayfly's PCA9536 4-channel
+     * I2C expander to interface with channel-selection pins on a TMUX1208 multiplexer, which 
+     * is hooked to the 8 voltage-out pins of 8 A139x Hall effect sensors and can be used
+     * to select with sensor's voltage is sent to the dataPin on the Mayfly to be read as
+     * an analog voltage. This also uses an 8-channel I2C PCA9557 port expander chip on the 
+     * adapter board that is hooked to the 8 SLEEP pins of the 8 A139x Hall effect sensors,
+     * and should allow for the designated sensor to be awakened/slept before and after each
+     * reading. 
+     * 
+     *
+     * @param powerPin The pin on the mcu controlling power to the Allegro A139x
+     *   Use -1 if it is continuously powered or you are controlling the SLEEP
+     *   pin via a I2C port expander (PCA9557)
+     * @param dataPin The processor ADC port pin to read the voltage from the
+     * sensor.  Not all processor pins can be used as analog pins.  Those usable
+     * as analog pins generally are numbered with an "A" in front of the number
+     * - ie, A0. The 8-channel adapter board sends data to the A0 pin of the Mayfly
+     * by default.
+     * @param measurementsToAverage The number of measurements to take and
+     * average before giving a "final" result from the sensor; optional with a
+     * default value of 10.
+     * @param muxChannel The channel (0-7) that this A139x is attached to on the
+     * PCA9557 I2C port expander (controlling the SLEEP pin) and on the 
+     * TMUX1208 analog (de)multiplexer that will feed the A139x's voltage signal
+     * to the dataPin defined above. The TMUX1208 channel is set using the 
+     * Mayfly v1.1's onboard PCA9536 I2C port expander that is connected to the
+     * TMUX1208's channel selection pins (X0, X1, X2 of PCA9536 connected to A0, 
+     * A1, A2 on the TMUX1208). 
+     */
+   AllegroA139x(int8_t powerPin, int8_t dataPin,
+                    uint8_t measurementsToAverage = 10,
+                    uint8_t muxChannel);
+
     /**
      * @brief Construct a new AllegroA139x object with pins 
      * for the EnviroDIY Mayfly 1.x.
