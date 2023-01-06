@@ -26,7 +26,24 @@ AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
              measurementsToAverage),
-             _muxChannel(muxChannel){}
+             _muxChannel(muxChannel),
+             _pca9557(),
+             _pca9536() {}
+// Version with 2 multiplexer objects being passed
+AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, 
+                    int8_t powerPin, int8_t dataPin,
+                    uint8_t measurementsToAverage = 4,
+                    uint8_t muxChannel) 
+    : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
+             ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
+             ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
+             measurementsToAverage),
+             _muxChannel(muxChannel),
+             _pca9557(&gpio8),
+             _pca9536(&gpio4) {}
+             
+
+
 // Short-cut version for single sensor on default channel + settings             
 AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
@@ -35,6 +52,38 @@ AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
             MAYFLY_ALLEGROA139X_DATA_PIN, measurementsToAverage,
             ALLEGROA139X_INC_CALC_VARIABLES) {}
 AllegroA139x::~AllegroA139x() {}
+
+// LPM: Modeled on AOSongDHT.cpp setup
+// The question is whether is an efficient way to accomplish
+// this, because it's potentially going to be used to create 8 
+// redundant _pca9557 objects if you have 8 Hall sensor objects
+// It may be more sensible to figure out how to pass a pointer to
+// an existing PCA9557 object created outside the Hall sensor library
+// and then interact with that via the _muxChannel variable
+bool AllegroA139x::setup(void) {
+    // Set up the PCA9557 multiplexer
+    // LPM: If I pass the pointers to existing gpio8/gpio4
+    // objects then this stuff should go in the main program
+    // setup loop where those objects are initialized
+    _pca9557.setPolarity(IO_NON_INVERTED);
+    _pca9557.setMode(IO_OUTPUT);
+    _pca9557.setState(IO_LOW); // This should SLEEP all attached AllegroA139x sensors
+    
+    // Set up the PCA9536 multiplexer
+    if( _pca9536.begin() == false){
+        Serial.println("PCA9536 not detected");
+    }
+    // Set all 4 pins on the PCA9536 as outputs - these will control the TMUX1208 multiplexer channel selector
+    for (int i = 0; i < 4; i++)
+    {
+        // pinMode can be used to set an I/O as OUTPUT or INPUT
+        _pca9536.pinMode(i, OUTPUT);
+    }
+
+
+    return Sensor::setup();  // this will set pin modes and the setup status bit
+}
+
 
 
 bool AllegroA139x::addSingleMeasurementResult(void) {

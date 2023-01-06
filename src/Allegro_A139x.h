@@ -57,6 +57,8 @@
 #undef MS_DEBUGGING_DEEP
 #include "VariableBase.h"
 #include "SensorBase.h"
+#include "PCA9557.h"
+#include "SparkFun_PCA9536_Arduino_Library.h"
 
 /** @ingroup sensor_allegroA139x */
 /**@{*/
@@ -218,7 +220,7 @@ class AllegroA139x : public Sensor {
      * default value of 10.
      */
     AllegroA139x(int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 10);
+                    uint8_t measurementsToAverage = 4);
 
     /**
      * @brief Construct a new AllegroA139x object for use with the 8-channel Mayfly adapter board
@@ -254,8 +256,17 @@ class AllegroA139x : public Sensor {
      * A1, A2 on the TMUX1208). 
      */
    AllegroA139x(int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 10,
+                    uint8_t measurementsToAverage = 4,
                     uint8_t muxChannel);
+
+   // Version that passes pointers to existing 
+   // multiplexer objects 
+   AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, 
+                    int8_t powerPin, int8_t dataPin,
+                    uint8_t measurementsToAverage = 4,
+                    uint8_t muxChannel);
+
+
 
     /**
      * @brief Construct a new AllegroA139x object with pins 
@@ -269,11 +280,16 @@ class AllegroA139x : public Sensor {
      * average before giving a "final" result from the sensor; optional with a
      * default value of 10.
      */
-    explicit AllegroA139x(uint8_t measurementsToAverage = 10);
+    explicit AllegroA139x(uint8_t measurementsToAverage = 4);
     /**
      * @brief Destroy the AllegroA139x object - no action needed.
      */
     ~AllegroA139x();
+
+    /**
+     * @copydoc Sensor::setup()
+     */
+    bool setup(void) override;
 
     /**
      * @copydoc Sensor::addSingleMeasurementResult()
@@ -285,7 +301,12 @@ class AllegroA139x : public Sensor {
     // generic function. 
 
  private:
-   uint8_t _muxChannel; 
+   uint8_t _muxChannel; // used to let the PCA9557/PCA9536 which channel you want
+   PCA9557* _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
+   PCA9536* _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+   // LPM: This may work better as:
+   //PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
+   //PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
     /**
      * 
      */
