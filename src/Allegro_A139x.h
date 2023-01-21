@@ -307,6 +307,7 @@ class AllegroA139x : public Sensor {
    // LPM: This may work better as:
    //PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
    //PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+    
     /**
      * 
      */
