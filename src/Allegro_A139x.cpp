@@ -168,6 +168,10 @@ void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
     }
 }
 
+void AllegroA139x::disableTMUX1208(PCA9536 mux){
+    mux.write(3, LOW); // Pulls the ENABLE pin on the PCA9536 low on the attached TMUX1208
+}
+
 
 bool AllegroA139x::addSingleMeasurementResult(void) {
 
@@ -185,16 +189,19 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
     // float lux_val     = -9999;
     int32_t sensor_adc = -9999 ;
 
-    // Set the PCA9557 multiplexer to turn on (wake up) the Hall effect sensor
-    _pca9557.setState(_pca9557_pin, IO_HIGH);
-
-    // Update the PCA9536 multiplexer to select the correct data channel on the TMUX1208
-    setPCA9536channel(_muxChannel, _pca9536);
 
     // Check a measurement was *successfully* started (status bit 6 set)
     // Only go on to get a result if it was 
     // TODO: Check if this is useful, I think not?
     if (bitRead(_sensorStatus, 6)) {
+
+        // Set the PCA9557 multiplexer to turn on (wake up) the Allegro A139x Hall effect sensor
+        _pca9557.setState(_pca9557_pin, IO_HIGH);
+
+        // Update the PCA9536 multiplexer to select the correct data channel on the TMUX1208
+        setPCA9536channel(_muxChannel, _pca9536);
+
+
         // Set the resolution for the processor ADC, only applies to SAMD
         // boards.
 #if !defined ARDUINO_ARCH_AVR
@@ -233,6 +240,12 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
         MS_DBG(F("  Counts:"), sensor_adc);
         // MS_DBG(F("  Current:"), current_val, F("µA"));
         // MS_DBG(F("  Illuminance:"), lux_val, F("lux"));
+
+    // Set the PCA9557 multiplexer to turn off (sleep) the Hall effect sensor
+    _pca9557.setState(_pca9557_pin, IO_LOW);
+
+    disableTMUX1208(_pca9536); // Turn off the TMUX1208 by setting the PCA9536 pin 3 LOW
+
     } else {
         MS_DBG(getSensorNameAndLocation(), F("is not currently measuring!"));
     }

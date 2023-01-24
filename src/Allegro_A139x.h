@@ -325,12 +325,17 @@ class AllegroA139x : public Sensor {
      * 
      * @param gpio4 The PCA9536 object
      */
-
   void setPCA9536channel(uint8_t channel, PCA9536 gpio4); 
-    
-    /**
+
+      /**
+     * @brief Set the ENABLE pin low on PCA9536 to disable the TMUX1208 multiplexer
+     *
      * 
+     * @param gpio4 The PCA9536 object
      */
+  void disableTMUX1208(PCA9536 gpio4);
+    
+
 
 };
 
