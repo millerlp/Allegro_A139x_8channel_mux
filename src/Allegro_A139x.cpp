@@ -198,6 +198,7 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
 
         // Set the PCA9557 multiplexer to turn on (wake up) the Allegro A139x Hall effect sensor
         _pca9557.setState(_pca9557_pin, IO_HIGH);
+        delayMicroseconds(100);
 
         // Update the PCA9536 multiplexer to select the correct data channel on the TMUX1208
         setPCA9536channel(_muxChannel, _pca9536);
