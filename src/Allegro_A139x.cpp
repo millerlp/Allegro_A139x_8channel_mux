@@ -12,12 +12,12 @@
 
 // The constructor 
 // For a single A139x Hall effect sensor connected to the Mayfly
-AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
-                                   uint8_t measurementsToAverage)
-    : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-             ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-             ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
-             measurementsToAverage) {}
+// AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
+//                                    uint8_t measurementsToAverage)
+//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
+//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
+//              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
+//              measurementsToAverage) {}
 // Version with multiplexer channel variable included, for 8-channel adapter board             
 // AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel,
 //                     uint8_t measurementsToAverage = 4
@@ -32,7 +32,7 @@ AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
 // Version with 2 multiplexer objects being passed
 AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
                     int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 4
+                    uint8_t measurementsToAverage
                     ) 
     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
@@ -45,12 +45,12 @@ AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
 // Cribbing from MaxBotixSonar.cpp on passing the pointer to the objects
 
 // Short-cut version for single sensor on default channel + settings             
-AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
-    : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-             ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-             ALLEGROA139X_MEASUREMENT_TIME_MS, MAYFLY_ALLEGROA139X_POWER_PIN,
-            MAYFLY_ALLEGROA139X_DATA_PIN, measurementsToAverage,
-            ALLEGROA139X_INC_CALC_VARIABLES)  {}
+// AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
+//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
+//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
+//              ALLEGROA139X_MEASUREMENT_TIME_MS, MAYFLY_ALLEGROA139X_POWER_PIN,
+//             MAYFLY_ALLEGROA139X_DATA_PIN, measurementsToAverage,
+//             ALLEGROA139X_INC_CALC_VARIABLES)  {}
 AllegroA139x::~AllegroA139x() {}
 
 // LPM: Modeled on AOSongDHT.cpp setup
