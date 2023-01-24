@@ -39,8 +39,8 @@ AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
              measurementsToAverage),
              _muxChannel(muxChannel),
-             _pca9557(gpio8),           // maybe _pca9557(&gpio8)
-             _pca9536(gpio4) {}         // maybe _pca9536(&gpio4)
+             _pca9557(&gpio8),           // maybe _pca9557(&gpio8)
+             _pca9536(&gpio4) {}         // maybe _pca9536(&gpio4)
              
 // Cribbing from MaxBotixSonar.cpp on passing the pointer to the objects
 

@@ -262,10 +262,15 @@ class AllegroA139x : public Sensor {
 
    // Version that passes pointers to existing 
    // multiplexer objects 
-   AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
-                    int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 4
-                    );
+  //  AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
+  //                   int8_t powerPin, int8_t dataPin,
+  //                   uint8_t measurementsToAverage = 4
+  //                   );
+    
+    AllegroA139x(PCA9557 gpio8, PCA9536 gpio4, uint8_t muxChannel,
+                int8_t powerPin, int8_t dataPin,
+                uint8_t measurementsToAverage = 4
+                );
 
 
 
@@ -306,8 +311,10 @@ class AllegroA139x : public Sensor {
   //  PCA9557* _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
   //  PCA9536* _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
    // LPM: This may work better as:
-   PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
-   PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+  //  PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
+  //  PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+  PCA9557 _pca9557;
+  PCA9536 _pca9536;
     
     /**
      * 
