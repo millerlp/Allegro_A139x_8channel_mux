@@ -218,9 +218,9 @@ class AllegroA139x : public Sensor {
      * @param measurementsToAverage The number of measurements to take and
      * average before giving a "final" result from the sensor; optional with a
      * default value of 10.
-     */
-    AllegroA139x(int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 4);
+    //  */
+    // AllegroA139x(int8_t powerPin, int8_t dataPin,
+    //                 uint8_t measurementsToAverage = 4);
 
     /**
      * @brief Construct a new AllegroA139x object for use with the 8-channel Mayfly adapter board
@@ -244,9 +244,6 @@ class AllegroA139x : public Sensor {
      * as analog pins generally are numbered with an "A" in front of the number
      * - ie, A0. The 8-channel adapter board sends data to the A0 pin of the Mayfly
      * by default.
-     * @param measurementsToAverage The number of measurements to take and
-     * average before giving a "final" result from the sensor; optional with a
-     * default value of 10.
      * @param muxChannel The channel (0-7) that this A139x is attached to on the
      * PCA9557 I2C port expander (controlling the SLEEP pin) and on the 
      * TMUX1208 analog (de)multiplexer that will feed the A139x's voltage signal
@@ -254,10 +251,14 @@ class AllegroA139x : public Sensor {
      * Mayfly v1.1's onboard PCA9536 I2C port expander that is connected to the
      * TMUX1208's channel selection pins (X0, X1, X2 of PCA9536 connected to A0, 
      * A1, A2 on the TMUX1208). 
+     * @param measurementsToAverage The number of measurements to take and
+     * average before giving a "final" result from the sensor; optional with a
+     * default value of 10.
+
      */
-   AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel = 0,
-                    uint8_t measurementsToAverage = 4
-                    );
+  //  AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel = 0,
+  //                   uint8_t measurementsToAverage = 4
+  //                   );
 
    // Version that passes pointers to existing 
    // multiplexer objects 
@@ -280,7 +281,7 @@ class AllegroA139x : public Sensor {
      * average before giving a "final" result from the sensor; optional with a
      * default value of 10.
      */
-    explicit AllegroA139x(uint8_t measurementsToAverage = 4);
+    // explicit AllegroA139x(uint8_t measurementsToAverage = 4);
     /**
      * @brief Destroy the AllegroA139x object - no action needed.
      */
