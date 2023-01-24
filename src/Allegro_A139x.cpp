@@ -93,7 +93,7 @@ bool AllegroA139x::setup(void) {
     }
 
     // Define a variable of the type PCA9557_pin_t based on the _muxChannel value
-    PCA9557_pin_t _pca9557_pin; 
+    // PCA9557_pin_t _pca9557_pin; 
     switch (_muxChannel){
         case 0: 
             _pca9557_pin = IO0;
