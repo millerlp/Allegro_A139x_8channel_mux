@@ -92,6 +92,35 @@ bool AllegroA139x::setup(void) {
         _pca9536.pinMode(i, OUTPUT);
     }
 
+    // Define a variable of the type PCA9557_pin_t based on the _muxChannel value
+    switch (_muxChannel){
+        case 0: 
+            PCA9557_pin_t _pca9557_pin = IO0;
+        break;
+        case 1:
+            PCA9557_pin_t _pca9557_pin = IO1;
+        break;
+        case 2:
+            PCA9557_pin_t _pca9557_pin = IO2;
+        break;
+        case 3:
+            PCA9557_pin_t _pca9557_pin = IO3;
+        break;
+        case 4:
+            PCA9557_pin_t _pca9557_pin = IO4;
+        break;
+        case 5:
+            PCA9557_pin_t _pca9557_pin = IO5;
+        break;
+        case 6:
+            PCA9557_pin_t _pca9557_pin = IO6;
+        break;
+        case 7:
+            PCA9557_pin_t _pca9557_pin = IO7;
+        break;
+    }
+        
+
 
     return Sensor::setup();  // this will set pin modes and the setup status bit
 }
@@ -113,6 +142,9 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
     // float current_val = -9999;
     // float lux_val     = -9999;
     int32_t sensor_adc = -9999 ;
+
+    // Set the PCA9557 multiplexer to turn on (wake up) the Hall effect sensor
+    _pca9557.setState(_pca9557_pin, IO_HIGH);
 
     // Check a measurement was *successfully* started (status bit 6 set)
     // Only go on to get a result if it was 
