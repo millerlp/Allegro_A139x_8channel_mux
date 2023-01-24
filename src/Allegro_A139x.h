@@ -302,11 +302,11 @@ class AllegroA139x : public Sensor {
 
  private:
    uint8_t _muxChannel; // used to let the PCA9557/PCA9536 which channel you want
-   PCA9557* _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
-   PCA9536* _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+  //  PCA9557* _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
+  //  PCA9536* _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
    // LPM: This may work better as:
-   //PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
-   //PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
+   PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
+   PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
     
     /**
      * 
