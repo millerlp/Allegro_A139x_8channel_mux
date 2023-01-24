@@ -317,6 +317,15 @@ class AllegroA139x : public Sensor {
   PCA9536 _pca9536;  // Create private version of PCA9536 object
   PCA9557_pin_t _pca9557_pin; 
 
+    /**
+     * @brief Update the pins on PCA9536 to select a channel on the TMUX1208 multiplexer
+     *
+     *
+     * @param channel The desired channel to read on the TMUX1208 (valid values 0-7)
+     * 
+     * @param gpio4 The PCA9536 object
+     */
+
   void setPCA9536channel(uint8_t channel, PCA9536 gpio4); 
     
     /**

@@ -125,42 +125,42 @@ bool AllegroA139x::setup(void) {
 
 
 void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
-    if (channel == 1) {
+    if (channel == 0) {
         mux.write(0, LOW);
         mux.write(1, LOW);
         mux.write(2, LOW);
         mux.write(3, HIGH); // Pull high to ENable multiplexer
-    } else if (channel == 2) {
+    } else if (channel == 1) {
         mux.write(0, HIGH);
         mux.write(1, LOW);
         mux.write(2, LOW);
         mux.write(3, HIGH);
-    } else if (channel == 3) {
+    } else if (channel == 2) {
         mux.write(0, LOW);
+        mux.write(1, HIGH);
+        mux.write(2, LOW);
+        mux.write(3, HIGH);
+    } else if (channel == 3) {
+        mux.write(0, HIGH);
         mux.write(1, HIGH);
         mux.write(2, LOW);
         mux.write(3, HIGH);
     } else if (channel == 4) {
-        mux.write(0, HIGH);
-        mux.write(1, HIGH);
-        mux.write(2, LOW);
-        mux.write(3, HIGH);
-    } else if (channel == 5) {
         mux.write(0, LOW);
+        mux.write(1, LOW);
+        mux.write(2, HIGH);
+        mux.write(3, HIGH);        
+    } else if (channel == 5) {
+        mux.write(0, HIGH);
         mux.write(1, LOW);
         mux.write(2, HIGH);
         mux.write(3, HIGH);        
     } else if (channel == 6) {
-        mux.write(0, HIGH);
-        mux.write(1, LOW);
-        mux.write(2, HIGH);
-        mux.write(3, HIGH);        
-    } else if (channel == 7) {
         mux.write(0, LOW);
         mux.write(1, HIGH);
         mux.write(2, HIGH);
         mux.write(3, HIGH);        
-    } else if (channel == 8) {
+    } else if (channel == 7) {
         mux.write(0, HIGH);
         mux.write(1, HIGH);
         mux.write(2, HIGH);
@@ -188,7 +188,7 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
     // Set the PCA9557 multiplexer to turn on (wake up) the Hall effect sensor
     _pca9557.setState(_pca9557_pin, IO_HIGH);
 
-    // Set the PCA9536 multiplexer to select the correct data channel on the TMUX1208
+    // Update the PCA9536 multiplexer to select the correct data channel on the TMUX1208
     setPCA9536channel(_muxChannel, _pca9536);
 
     // Check a measurement was *successfully* started (status bit 6 set)
