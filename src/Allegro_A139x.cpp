@@ -93,30 +93,31 @@ bool AllegroA139x::setup(void) {
     }
 
     // Define a variable of the type PCA9557_pin_t based on the _muxChannel value
+    PCA9557_pin_t _pca9557_pin; 
     switch (_muxChannel){
         case 0: 
-            PCA9557_pin_t _pca9557_pin = IO0;
+            _pca9557_pin = IO0;
         break;
         case 1:
-            PCA9557_pin_t _pca9557_pin = IO1;
+            _pca9557_pin = IO1;
         break;
         case 2:
-            PCA9557_pin_t _pca9557_pin = IO2;
+            _pca9557_pin = IO2;
         break;
         case 3:
-            PCA9557_pin_t _pca9557_pin = IO3;
+            _pca9557_pin = IO3;
         break;
         case 4:
-            PCA9557_pin_t _pca9557_pin = IO4;
+            _pca9557_pin = IO4;
         break;
         case 5:
-            PCA9557_pin_t _pca9557_pin = IO5;
+            _pca9557_pin = IO5;
         break;
         case 6:
-            PCA9557_pin_t _pca9557_pin = IO6;
+            _pca9557_pin = IO6;
         break;
         case 7:
-            PCA9557_pin_t _pca9557_pin = IO7;
+            _pca9557_pin = IO7;
         break;
     }
 
@@ -129,7 +130,7 @@ void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
         mux.write(0, LOW);
         mux.write(1, LOW);
         mux.write(2, LOW);
-        mux.write(3, HIGH); // Pull high to ENable multiplexer
+        mux.write(3, HIGH); // Pull high to ENable the attached TMUX1208 multiplexer
     } else if (channel == 1) {
         mux.write(0, HIGH);
         mux.write(1, LOW);

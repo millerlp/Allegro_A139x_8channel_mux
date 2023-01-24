@@ -320,17 +320,17 @@ class AllegroA139x : public Sensor {
     /**
      * @brief Update the pins on PCA9536 to select a channel on the TMUX1208 multiplexer
      *
-     *
-     * @param channel The desired channel to read on the TMUX1208 (valid values 0-7)
+     * @param channel The desired channel to read on the TMUX1208 multiplexer (valid values 0-7)
      * 
-     * @param gpio4 The PCA9536 object
+     * @param gpio4 The PCA9536 object. The 4 pins from this device are attached to the
+     * address (channel selection) pins on the TMUX1208 multiplexer and the multiplexer's
+     * ENABLE pin. 
      */
   void setPCA9536channel(uint8_t channel, PCA9536 gpio4); 
 
       /**
-     * @brief Set the ENABLE pin low on PCA9536 to disable the TMUX1208 multiplexer
+     * @brief Set pin 3 low on PCA9536 to disable the TMUX1208 multiplexer
      *
-     * 
      * @param gpio4 The PCA9536 object
      */
   void disableTMUX1208(PCA9536 gpio4);
