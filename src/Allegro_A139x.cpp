@@ -30,7 +30,19 @@
 //              _pca9557(),
 //              _pca9536() {}
 // Version with 2 multiplexer objects being passed
-AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
+// AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
+//                     int8_t powerPin, int8_t dataPin,
+//                     uint8_t measurementsToAverage
+//                     ) 
+//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
+//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
+//              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
+//              measurementsToAverage),
+//              _muxChannel(muxChannel),
+//              _pca9557(&gpio8),           // maybe _pca9557(&gpio8)
+//              _pca9536(&gpio4) {}         // maybe _pca9536(&gpio4)
+
+AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4, uint8_t muxChannel,
                     int8_t powerPin, int8_t dataPin,
                     uint8_t measurementsToAverage
                     ) 
@@ -39,8 +51,8 @@ AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
              measurementsToAverage),
              _muxChannel(muxChannel),
-             _pca9557(&gpio8),           // maybe _pca9557(&gpio8)
-             _pca9536(&gpio4) {}         // maybe _pca9536(&gpio4)
+             _pca9557(gpio8),           // maybe _pca9557(&gpio8)
+             _pca9536(gpio4) {}         // maybe _pca9536(&gpio4)             
              
 // Cribbing from MaxBotixSonar.cpp on passing the pointer to the objects
 
