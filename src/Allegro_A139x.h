@@ -255,16 +255,16 @@ class AllegroA139x : public Sensor {
      * TMUX1208's channel selection pins (X0, X1, X2 of PCA9536 connected to A0, 
      * A1, A2 on the TMUX1208). 
      */
-   AllegroA139x(int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 4,
-                    uint8_t muxChannel);
+   AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel = 0,
+                    uint8_t measurementsToAverage = 4
+                    );
 
    // Version that passes pointers to existing 
    // multiplexer objects 
-   AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, 
+   AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
                     int8_t powerPin, int8_t dataPin,
-                    uint8_t measurementsToAverage = 4,
-                    uint8_t muxChannel);
+                    uint8_t measurementsToAverage = 4
+                    );
 
 
 
