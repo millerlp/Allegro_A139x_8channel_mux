@@ -316,6 +316,8 @@ class AllegroA139x : public Sensor {
   PCA9557 _pca9557;  // Create private version of PCA9557 object
   PCA9536 _pca9536;  // Create private version of PCA9536 object
   PCA9557_pin_t _pca9557_pin; 
+
+  void setPCA9536channel(uint8_t channel, PCA9536 gpio4); 
     
     /**
      * 
