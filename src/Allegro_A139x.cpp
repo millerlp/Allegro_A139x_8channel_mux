@@ -10,6 +10,15 @@
 #include "Allegro_A139x.h"
 
 
+/* 
+* TODO: try modifying this to instead have the object produce up to 8 outputs variables
+*   and just do all the mux switching within the single object
+*   In this case the user could send the number of channels to sample, or an array of
+*   channels to sample, and then create separate ModularSensor Variable* types for 
+*   each of those channels. You can still have unique uuids for each of the sensors
+*   in that case. 
+*/
+
 // The constructor 
 // For a single A139x Hall effect sensor connected to the Mayfly
 // AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
