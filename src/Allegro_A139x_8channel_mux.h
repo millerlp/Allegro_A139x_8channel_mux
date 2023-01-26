@@ -34,8 +34,8 @@
 /* clang-format on */
 
 // Header Guards
-#ifndef SRC_SENSORS_ALLEGROA139X_H_
-#define SRC_SENSORS_ALLEGROA139X_H_
+#ifndef SRC_SENSORS_ALLEGROA139X_8CHANNEL_MUX_H_
+#define SRC_SENSORS_ALLEGROA139X_8CHANNEL_MUX_H_
 
 // Debugging Statement
 
@@ -678,4 +678,4 @@ class Hall7_Count : public Variable {
 
 
 /**@}*/
-#endif  // SRC_SENSORS_ALLEGROA139X_H_
+#endif  // SRC_SENSORS_ALLEGROA139X_8CHANNEL_MUX_H_

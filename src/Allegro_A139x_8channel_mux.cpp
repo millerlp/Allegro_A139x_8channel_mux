@@ -7,7 +7,7 @@
  * @brief Implements the Allegro_A139x Hall effect 8-channel multiplexed sensor class
  */
 
-#include "Allegro_A139x.h"
+#include "Allegro_A139x_8channel_mux.h"
 
 // The constructor
 // For an 8-channel multiplexed set of Allegro A139x analog Hall effect sensors on 
