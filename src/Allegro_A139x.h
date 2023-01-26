@@ -304,7 +304,13 @@ class AllegroA139x : public Sensor {
   PCA9536 _pca9536;  // Create private version of PCA9536 object
 };
 
-
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ */
+/* clang-format on */
 class Hall0_Count : public Variable {
    public: 
      /**
@@ -329,7 +335,7 @@ class Hall0_Count : public Variable {
      *
      * @note This must be tied with a parent AllegroA139x before it can be used.
      */
-      Hall0_Count()
+    Hall0_Count()
         : Variable((const uint8_t) HALL0_VAR_NUM,
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
