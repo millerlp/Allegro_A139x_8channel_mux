@@ -4,8 +4,9 @@
  * A branch of the EnviroDIY ModularSensors library for Arduino
  * @author Luke Miller <contact@lukemiller.org>
  *
- * @brief Take readings from Allegro A1395, A1393, A1391 Hall effect sensors
- * via the onboard ADC
+ * @brief Take readings from multiplexed Allegro A1395, A1393, A1391 Hall effect sensors
+ *  using PCA9557 to wake each sensor and PCA9536 to route sensor
+ * output through a TMUX1208 multiplexer to the onboard ADC.
  *
  */
 /* clang-format off */
@@ -26,8 +27,8 @@
  * [Datasheet]()
  *
  * @section sensor_allegroa139x_ctor Sensor Constructors
- * {{ @ref AllegroA139x::AllegroA139x(uint8_t) }}
- * {{ @ref AllegroA139x::AllegroA139x(int8_t, int8_t, uint8_t) }}
+ * 
+ * {{ @ref AllegroA139x::AllegroA139x(PCA9557, PCA9536, int8_t, int8_t, uint8_t) }}
  *
  */
 /* clang-format on */
@@ -37,7 +38,6 @@
 #define SRC_SENSORS_ALLEGROA139X_H_
 
 // Debugging Statement
-// #define MS_EVERLIGHTALSPT19_DEBUG
 
 #ifdef MS_ALLEGROA139X_DEBUG
 #define MS_DEBUGGING_STD "AllegroA139x"
@@ -219,6 +219,8 @@
 /* clang-format off */
 /**
  * @brief The Sensor sub-class for the AllegroA139x Hall effect sensor.
+ * 
+ * @ingroup sensor_allegroA139x
  */
 /* clang-format on */
 class AllegroA139x : public Sensor {
@@ -309,6 +311,8 @@ class AllegroA139x : public Sensor {
  * @brief The Variable sub-class used for the
  * [adc output](@ref sensor_allegroa139x_counts) from an
  * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
  */
 /* clang-format on */
 class Hall0_Count : public Variable {
@@ -344,11 +348,19 @@ class Hall0_Count : public Variable {
     /**
      * @brief Destroy the Hall0 object - no action needed.
      */
-    // ~Hall0_Count() {}
+    ~Hall0_Count() {}
       
 };
 
-
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall1_Count : public Variable {
    public: 
      /**
@@ -386,6 +398,15 @@ class Hall1_Count : public Variable {
       
 };
 
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall2_Count : public Variable {
    public: 
      /**
@@ -422,6 +443,16 @@ class Hall2_Count : public Variable {
       
 };
 
+
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall3_Count : public Variable {
    public: 
      /**
@@ -458,6 +489,16 @@ class Hall3_Count : public Variable {
       
 };
 
+
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall4_Count : public Variable {
    public: 
      /**
@@ -494,6 +535,16 @@ class Hall4_Count : public Variable {
       
 };
 
+
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall5_Count : public Variable {
    public: 
      /**
@@ -530,6 +581,16 @@ class Hall5_Count : public Variable {
       
 };
 
+
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall6_Count : public Variable {
    public: 
      /**
@@ -566,6 +627,15 @@ class Hall6_Count : public Variable {
       
 };
 
+/* clang-format off */
+/**
+ * @brief The Variable sub-class used for the
+ * [adc output](@ref sensor_allegroa139x_counts) from an
+ * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
+ */
+/* clang-format on */
 class Hall7_Count : public Variable {
    public: 
      /**
@@ -608,6 +678,8 @@ class Hall7_Count : public Variable {
  * @brief The Variable sub-class used for the
  * [adc output](@ref sensor_allegroa139x_counts) from an
  * [Allegro A139x](@ref sensor_allegroa139x).
+ * 
+ * @ingroup sensor_allegroA139x
  */
 /* clang-format on */
 class AllegroA139x_Counts : public Variable {
