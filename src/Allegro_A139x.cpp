@@ -9,28 +9,12 @@
 
 #include "Allegro_A139x.h"
 
-
-/* 
-* TODO: try modifying this to instead have the object produce up to 8 outputs variables
-*   and just do all the mux switching within the single object
-*   In this case the user could send the number of channels to sample, or an array of
-*   channels to sample, and then create separate ModularSensor Variable* types for 
-*   each of those channels. You can still have unique uuids for each of the sensors
-*   in that case. 
-*/
-
-// The constructor 
-// For a single A139x Hall effect sensor connected to the Mayfly
-// AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin,
-//                                    uint8_t measurementsToAverage)
-//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-//              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
-//              measurementsToAverage) {}
-
 // The constructor
 // For an 8-channel multiplexed set of Allegro A139x analog Hall effect sensors on 
-// an adapter attached to an EnviroDIY Mayfly v1.1
+// an adapter attached to an EnviroDIY Mayfly v1.1. The adapter should use a 
+// PCA9557 I2C expander to activate the SLEEP lines on each Allegro A139x sensor, 
+// and a PCA9536 (built onto the Mayfly 1.1) to activate the analog multiplexer
+// TMUX1208 that feeds the appropriate sensor's voltage output to the Mayfly's ADC
 AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
                     int8_t powerPin, int8_t dataPin,
                     uint8_t measurementsToAverage
@@ -111,14 +95,7 @@ bool AllegroA139x::setup(void) {
     return Sensor::setup();  // this will set pin modes and the setup status bit
 }
 
-
-
-
-
 bool AllegroA139x::addSingleMeasurementResult(void) {
-
-// TODO: LPM: explore if having a startSingleMeasurement() function
-// in this library would be useful. 
 
     // Initialize values for each sensor channel
     int32_t sensor_adc = -9999 ;
@@ -174,12 +151,9 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
     } else {
         MS_DBG(getSensorNameAndLocation(), F("is not currently measuring!"));
     }
-    // Pass the uint32_t sensor_adc value to be verified and added to the 
-    // variable array that will be averaged
-    // verifyAndAddMeasurementResult(ALLEGROA139X_COUNTS_VAR_NUM, sensor_adc);
 
     // Pass the values stored in hallVals to the appropriate locations 
-    // (verify function lives in SensorBase.cpp)
+    // (the verify function lives in ModularSensors/src/SensorBase.cpp)
     verifyAndAddMeasurementResult(HALL0_VAR_NUM, hallVals[0]);
     verifyAndAddMeasurementResult(HALL1_VAR_NUM, hallVals[1]);
     verifyAndAddMeasurementResult(HALL2_VAR_NUM, hallVals[2]);
