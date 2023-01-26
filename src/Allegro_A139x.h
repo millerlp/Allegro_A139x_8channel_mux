@@ -361,41 +361,41 @@ class Hall0_Count : public Variable {
  * @ingroup sensor_allegroA139x
  */
 /* clang-format on */
-class AllegroA139x_Counts : public Variable {
- public:
-    /**
-     * @brief Construct a new AllegroA139x_Counts object.
-     *
-     * @param parentSense The parent AllegroA139x providing the result
-     * values.
-     * @param uuid A universally unique identifier (UUID or GUID) for the
-     * variable; optional with the default value of an empty string.
-     * @param varCode A short code to help identify the variable in files;
-     * optional with a default value of "AllegroA139xCounts".
-     */
-    explicit AllegroA139x_Counts(
-        AllegroA139x* parentSense, const char* uuid = "",
-        const char* varCode = ALLEGROA139X_COUNTS_DEFAULT_CODE)
-        : Variable(parentSense, (const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
-                   (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
-                   ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME, varCode,
-                   uuid) {}
-    /**
-     * @brief Construct a new AllegroA139x_Counts object.
-     *
-     * @note This must be tied with a parent AllegroA139x before it can be
-     * used.
-     */
-    AllegroA139x_Counts()
-        : Variable((const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
-                   (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
-                   ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
-                   ALLEGROA139X_COUNTS_DEFAULT_CODE) {}
-    /**
-     * @brief Destroy the AllegroA139x_Counts object - no action needed.
-     */
-    ~AllegroA139x_Counts() {}
-};
+// class AllegroA139x_Counts : public Variable {
+//  public:
+//     /**
+//      * @brief Construct a new AllegroA139x_Counts object.
+//      *
+//      * @param parentSense The parent AllegroA139x providing the result
+//      * values.
+//      * @param uuid A universally unique identifier (UUID or GUID) for the
+//      * variable; optional with the default value of an empty string.
+//      * @param varCode A short code to help identify the variable in files;
+//      * optional with a default value of "AllegroA139xCounts".
+//      */
+//     explicit AllegroA139x_Counts(
+//         AllegroA139x* parentSense, const char* uuid = "",
+//         const char* varCode = ALLEGROA139X_COUNTS_DEFAULT_CODE)
+//         : Variable(parentSense, (const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
+//                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+//                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME, varCode,
+//                    uuid) {}
+//     /**
+//      * @brief Construct a new AllegroA139x_Counts object.
+//      *
+//      * @note This must be tied with a parent AllegroA139x before it can be
+//      * used.
+//      */
+//     AllegroA139x_Counts()
+//         : Variable((const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
+//                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+//                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+//                    ALLEGROA139X_COUNTS_DEFAULT_CODE) {}
+//     /**
+//      * @brief Destroy the AllegroA139x_Counts object - no action needed.
+//      */
+//     ~AllegroA139x_Counts() {}
+// };
 
 
 /* clang-format off */
@@ -440,7 +440,7 @@ class Hall1_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    // ~Hall1_Count() {}
+    ~Hall1_Count() {}
       
 };
 
@@ -485,7 +485,7 @@ class Hall2_Count : public Variable {
     /**
      * @brief Destroy the Hall2 object - no action needed.
      */
-    // ~Hall2_Count() {}
+    ~Hall2_Count() {}
       
 };
 
@@ -531,7 +531,7 @@ class Hall3_Count : public Variable {
     /**
      * @brief Destroy the Hall3 object - no action needed.
      */
-    // ~Hall3_Count() {}
+    ~Hall3_Count() {}
       
 };
 
@@ -577,7 +577,7 @@ class Hall4_Count : public Variable {
     /**
      * @brief Destroy the Hall4 object - no action needed.
      */
-    // ~Hall4_Count() {}
+    ~Hall4_Count() {}
       
 };
 
@@ -623,7 +623,7 @@ class Hall5_Count : public Variable {
     /**
      * @brief Destroy the Hall5 object - no action needed.
      */
-    // ~Hall5_Count() {}
+    ~Hall5_Count() {}
       
 };
 
@@ -669,7 +669,7 @@ class Hall6_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    // ~Hall6_Count() {}
+    ~Hall6_Count() {}
       
 };
 
@@ -714,7 +714,7 @@ class Hall7_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    // ~Hall7_Count() {}
+    ~Hall7_Count() {}
       
 };
 
