@@ -1,5 +1,5 @@
 /**
- * @file Allegro_A139x_Hall_effect.cpp
+ * @file Allegro_A139x_8channel_mux.cpp
  * @copyright 2022-2023 Luke Miller
  * A branch of the EnviroDIY ModularSensors library for Arduino
  * @author Luke Miller <contact@lukemiller.org>
