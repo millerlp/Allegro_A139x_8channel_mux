@@ -361,52 +361,6 @@ class Hall0_Count : public Variable {
  * @ingroup sensor_allegroA139x
  */
 /* clang-format on */
-// class AllegroA139x_Counts : public Variable {
-//  public:
-//     /**
-//      * @brief Construct a new AllegroA139x_Counts object.
-//      *
-//      * @param parentSense The parent AllegroA139x providing the result
-//      * values.
-//      * @param uuid A universally unique identifier (UUID or GUID) for the
-//      * variable; optional with the default value of an empty string.
-//      * @param varCode A short code to help identify the variable in files;
-//      * optional with a default value of "AllegroA139xCounts".
-//      */
-//     explicit AllegroA139x_Counts(
-//         AllegroA139x* parentSense, const char* uuid = "",
-//         const char* varCode = ALLEGROA139X_COUNTS_DEFAULT_CODE)
-//         : Variable(parentSense, (const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
-//                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
-//                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME, varCode,
-//                    uuid) {}
-//     /**
-//      * @brief Construct a new AllegroA139x_Counts object.
-//      *
-//      * @note This must be tied with a parent AllegroA139x before it can be
-//      * used.
-//      */
-//     AllegroA139x_Counts()
-//         : Variable((const uint8_t)ALLEGROA139X_COUNTS_VAR_NUM,
-//                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
-//                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
-//                    ALLEGROA139X_COUNTS_DEFAULT_CODE) {}
-//     /**
-//      * @brief Destroy the AllegroA139x_Counts object - no action needed.
-//      */
-//     ~AllegroA139x_Counts() {}
-// };
-
-
-/* clang-format off */
-/**
- * @brief The Variable sub-class used for the
- * [adc output](@ref sensor_allegroa139x_counts) from an
- * [Allegro A139x](@ref sensor_allegroa139x).
- * 
- * @ingroup sensor_allegroA139x
- */
-/* clang-format on */
 class Hall1_Count : public Variable {
    public: 
      /**
