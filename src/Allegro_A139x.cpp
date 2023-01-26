@@ -27,31 +27,9 @@
 //              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
 //              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
 //              measurementsToAverage) {}
-// Version with multiplexer channel variable included, for 8-channel adapter board             
-// AllegroA139x::AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel,
-//                     uint8_t measurementsToAverage = 4
-//                     )         
-//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-//              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
-//              measurementsToAverage),
-//              _muxChannel(muxChannel),
-//              _pca9557(),
-//              _pca9536() {}
-// Version with 2 multiplexer objects being passed
-// AllegroA139x::AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
-//                     int8_t powerPin, int8_t dataPin,
-//                     uint8_t measurementsToAverage
-//                     ) 
-//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-//              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
-//              measurementsToAverage),
-//              _muxChannel(muxChannel),
-//              _pca9557(&gpio8),           // maybe _pca9557(&gpio8)
-//              _pca9536(&gpio4) {}         // maybe _pca9536(&gpio4)
 
-AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4, uint8_t muxChannel,
+
+AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
                     int8_t powerPin, int8_t dataPin,
                     uint8_t measurementsToAverage
                     ) 
@@ -59,19 +37,9 @@ AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4, uint8_t muxChannel,
              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
              measurementsToAverage),
-             _muxChannel(muxChannel),
-             _pca9557(gpio8),           // maybe _pca9557(&gpio8)
-             _pca9536(gpio4) {}         // maybe _pca9536(&gpio4)             
+             _pca9557(gpio8),           
+             _pca9536(gpio4) {}                     
              
-// Cribbing from MaxBotixSonar.cpp on passing the pointer to the objects
-
-// Short-cut version for single sensor on default channel + settings             
-// AllegroA139x::AllegroA139x(uint8_t measurementsToAverage)
-//     : Sensor("Allegro A139x", ALLEGROA139X_NUM_VARIABLES,
-//              ALLEGROA139X_WARM_UP_TIME_MS, ALLEGROA139X_STABILIZATION_TIME_MS,
-//              ALLEGROA139X_MEASUREMENT_TIME_MS, MAYFLY_ALLEGROA139X_POWER_PIN,
-//             MAYFLY_ALLEGROA139X_DATA_PIN, measurementsToAverage,
-//             ALLEGROA139X_INC_CALC_VARIABLES)  {}
 AllegroA139x::~AllegroA139x() {}
 
 // LPM: Modeled on AOSongDHT.cpp setup
@@ -82,10 +50,7 @@ AllegroA139x::~AllegroA139x() {}
 // an existing PCA9557 object created outside the Hall sensor library
 // and then interact with that via the _muxChannel variable
 bool AllegroA139x::setup(void) {
-    // Set up the PCA9557 multiplexer
-    // LPM: If I pass the pointers to existing gpio8/gpio4
-    // objects then this stuff should go in the main program
-    // setup loop where those objects are initialized
+    // Set up the PCA9557 multiplexer to output signals, and set all outputs LOW initially
     _pca9557.setPolarity(IO_NON_INVERTED);
     _pca9557.setMode(IO_OUTPUT);
     _pca9557.setState(IO_LOW); // This should SLEEP all attached AllegroA139x sensors
@@ -101,38 +66,100 @@ bool AllegroA139x::setup(void) {
         _pca9536.pinMode(i, OUTPUT);
     }
 
-    // Define a variable of the type PCA9557_pin_t based on the _muxChannel value
-    // PCA9557_pin_t _pca9557_pin; 
-    switch (_muxChannel){
-        case 0: 
-            _pca9557_pin = IO0;
-        break;
-        case 1:
-            _pca9557_pin = IO1;
-        break;
-        case 2:
-            _pca9557_pin = IO2;
-        break;
-        case 3:
-            _pca9557_pin = IO3;
-        break;
-        case 4:
-            _pca9557_pin = IO4;
-        break;
-        case 5:
-            _pca9557_pin = IO5;
-        break;
-        case 6:
-            _pca9557_pin = IO6;
-        break;
-        case 7:
-            _pca9557_pin = IO7;
-        break;
-    }
 
     return Sensor::setup();  // this will set pin modes and the setup status bit
 }
 
+
+void AllegroA139x::disableTMUX1208(PCA9536 mux){
+    mux.write(3, LOW); // Pulls the X3 pin low on the PCA9536 low on the attached TMUX1208 ENable pin
+}
+
+
+bool AllegroA139x::addSingleMeasurementResult(void) {
+
+// TODO: LPM: explore if having a startSingleMeasurement() function
+// in this library would be useful. 
+
+    // Initialize values for each sensor channel
+    int32_t sensor_adc = -9999 ;
+    // Initialize an array to hold the 8 channel values
+    int32_t hallVals [8] = {-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999};
+
+    // Check a measurement was *successfully* started (status bit 6 set)
+    // Only go on to get a result if it was 
+    // TODO: Check if this is useful, I think not?
+    if (bitRead(_sensorStatus, 6)) {
+
+        // Set the resolution for the processor ADC, only applies to SAMD
+        // boards.        
+        #if !defined ARDUINO_ARCH_AVR
+                analogReadResolution(ALLEGROA139X_ADC_RESOLUTION);
+        #endif  // ARDUINO_ARCH_AVR
+
+        // Set the analog reference mode for the voltage measurement.
+        // If possible, to get the best results, an external reference should be
+        // used.
+        analogReference(ALLEGROA139X_ADC_REFERENCE_MODE);
+        MS_DBG(getSensorNameAndLocation(), F("is reporting:"));
+        
+        for (int i = 0; i<=7; i++){
+            // Set the appropriate multiplexer channels
+            // Wake the A139x hall sensor by pulling the appropriate channel's pin PCA9557 high
+            _pca9557.setState((PCA9557_pin_t)i, IO_HIGH); 
+            // Specify TMUX1208 channel via PCA9536
+            setPCA9536channel(i, _pca9536);               
+            delayMicroseconds(60); 
+            // First measure the analog voltage.
+            // The return value from analogRead() is IN BITS NOT IN VOLTS!!
+            // Take a priming reading.
+            // First reading will be low - discard
+            analogRead(_dataPin);
+            // Take the reading we'll keep
+            sensor_adc = analogRead(_dataPin);
+            MS_DEEP_DBG("  ADC Bits:", sensor_adc);
+
+            if (0 == sensor_adc) {
+                // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
+                sensor_adc = -9999;
+            }
+            MS_DBG(F(" Channel: "), i);
+            MS_DBG(F("  Counts:"), sensor_adc);
+
+            // Write this channel's count value into the hallVals array
+            hallVals[i] = sensor_adc;
+
+            // Set the PCA9557 multiplexer to turn off (sleep) the Hall effect sensor
+            _pca9557.setState((PCA9557_pin_t)i, IO_LOW);
+        }
+    } else {
+        MS_DBG(getSensorNameAndLocation(), F("is not currently measuring!"));
+    }
+    // Pass the uint32_t sensor_adc value to be verified and added to the 
+    // variable array that will be averaged
+    // verifyAndAddMeasurementResult(ALLEGROA139X_COUNTS_VAR_NUM, sensor_adc);
+
+    // Pass the values stored in hallVals to the appropriate locations 
+    // (verify function lives in SensorBase.cpp)
+    verifyAndAddMeasurementResult(HALL0_VAR_NUM, hallVals[0]);
+    verifyAndAddMeasurementResult(HALL1_VAR_NUM, hallVals[1]);
+    verifyAndAddMeasurementResult(HALL2_VAR_NUM, hallVals[2]);
+    verifyAndAddMeasurementResult(HALL3_VAR_NUM, hallVals[3]);
+    verifyAndAddMeasurementResult(HALL4_VAR_NUM, hallVals[4]);
+    verifyAndAddMeasurementResult(HALL5_VAR_NUM, hallVals[5]);
+    verifyAndAddMeasurementResult(HALL6_VAR_NUM, hallVals[6]);
+    verifyAndAddMeasurementResult(HALL7_VAR_NUM, hallVals[7]);
+    
+    // Turn the analog multiplexer back off after making readings, using PCA9536
+    disableTMUX1208(_pca9536);
+
+    // Unset the time stamp for the beginning of this measurement
+    _millisMeasurementRequested = 0;
+    // Unset the status bits for a measurement request (bits 5 & 6)
+    _sensorStatus &= 0b10011111;
+
+    return true;
+}
 
 void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
     if (channel == 0) {
@@ -176,102 +203,4 @@ void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
         mux.write(2, HIGH);
         mux.write(3, HIGH);        
     }
-}
-
-void AllegroA139x::disableTMUX1208(PCA9536 mux){
-    mux.write(3, LOW); // Pulls the ENABLE pin on the PCA9536 low on the attached TMUX1208
-}
-
-
-bool AllegroA139x::addSingleMeasurementResult(void) {
-
-// TODO: LPM: work out how to make a version of this function that can
-// use the multiplexers when requested, based on the private
-// variable _muxChannel being available. This may require the
-// use of a #define macro to tell the library whether to run
-// multiplexer code or ignore it.
-// TODO: LPM: explore if having a startSingleMeasurement() function
-// in this library would be useful. 
-
-    // Initialize float variables
-    // float volt_val    = -9999;
-    // float current_val = -9999;
-    // float lux_val     = -9999;
-    int32_t sensor_adc = -9999 ;
-
-
-    // Check a measurement was *successfully* started (status bit 6 set)
-    // Only go on to get a result if it was 
-    // TODO: Check if this is useful, I think not?
-    if (bitRead(_sensorStatus, 6)) {
-
-        // Set the PCA9557 multiplexer to turn on (wake up) the Allegro A139x Hall effect sensor
-        _pca9557.setState(_pca9557_pin, IO_HIGH);
-        Serial.print("PCA9557 pin: "); Serial.println(_pca9557_pin);
-
-        delayMicroseconds(100);
-
-        // Update the PCA9536 multiplexer to select the correct data channel on the TMUX1208
-        setPCA9536channel(_muxChannel, _pca9536);
-        Serial.print("PC9536 channel: "); Serial.println(_muxChannel);
-
-        // Set the resolution for the processor ADC, only applies to SAMD
-        // boards.
-#if !defined ARDUINO_ARCH_AVR
-        analogReadResolution(ALLEGROA139X_ADC_RESOLUTION);
-#endif  // ARDUINO_ARCH_AVR
-        // Set the analog reference mode for the voltage measurement.
-        // If possible, to get the best results, an external reference should be
-        // used.
-        analogReference(ALLEGROA139X_ADC_REFERENCE_MODE);
-        MS_DBG(getSensorNameAndLocation(), F("is reporting:"));
-
-        // First measure the analog voltage.
-        // The return value from analogRead() is IN BITS NOT IN VOLTS!!
-        // Take a priming reading.
-        // First reading will be low - discard
-        analogRead(_dataPin);
-        // Take the reading we'll keep
-        sensor_adc = analogRead(_dataPin);
-        MS_DEEP_DBG("  ADC Bits:", sensor_adc);
-
-        if (0 == sensor_adc) {
-            // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
-            sensor_adc = 1;
-        }
-        // convert bits to volts
-        // volt_val = (_supplyVoltage / static_cast<float>(ALSPT19_ADC_MAX)) *
-            // static_cast<float>(sensor_adc);
-        // convert volts to current
-        // resistance is entered in kΩ and we want µA
-        // current_val = (volt_val / (_loadResistor * 1000)) * 1e6;
-        // convert current to illuminance
-        // from sensor datasheet, typical 200µA current for1000 Lux
-        // lux_val = current_val * (1000. / 200.);
-
-
-        MS_DBG(F("  Counts:"), sensor_adc);
-        // MS_DBG(F("  Current:"), current_val, F("µA"));
-        // MS_DBG(F("  Illuminance:"), lux_val, F("lux"));
-
-    // Set the PCA9557 multiplexer to turn off (sleep) the Hall effect sensor
-    _pca9557.setState(_pca9557_pin, IO_LOW);
-
-    disableTMUX1208(_pca9536); // Turn off the TMUX1208 by setting the PCA9536 pin 3 LOW
-
-    } else {
-        MS_DBG(getSensorNameAndLocation(), F("is not currently measuring!"));
-    }
-    // Pass the uint32_t sensor_adc value to be verified and added to the 
-    // variable array that will be averaged
-    verifyAndAddMeasurementResult(ALLEGROA139X_COUNTS_VAR_NUM, sensor_adc);
-    
-    
-
-    // Unset the time stamp for the beginning of this measurement
-    _millisMeasurementRequested = 0;
-    // Unset the status bits for a measurement request (bits 5 & 6)
-    _sensorStatus &= 0b10011111;
-
-    return true;
 }

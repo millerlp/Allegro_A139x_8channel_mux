@@ -64,14 +64,14 @@
 /**@{*/
 
 // Sensor Specific Defines
-/// @brief Sensor::_numReturnedValues; the A139x can report 1 "raw" value
+/// @brief Sensor::_numReturnedValues; the multiplexed A139x adapter board can report 8 "raw" value
 /// (voltage).
-#define ALLEGROA139X_NUM_VARIABLES 1
+#define ALLEGROA139X_NUM_VARIABLES 8
 /// @brief Sensor::_incCalcValues; we don't calculate any variables
 #define ALLEGROA139X_INC_CALC_VARIABLES 0
 /// @brief The power pin for the A139x, -1 if always on 
 #define MAYFLY_ALLEGROA139X_POWER_PIN -1
-/// @brief The data pin for the A139x on the EnviroDIY Mayfly v1.x
+/// @brief The data pin for the A139x on the EnviroDIY Mayfly v1.x with Hall effect adapter
 #define MAYFLY_ALLEGROA139X_DATA_PIN A0
 /// @brief The supply voltage for the A139x on the EnviroDIY Mayfly v1.x
 #define MAYFLY_ALLEGROA139X_SUPPLY_VOLTAGE 3.3
@@ -189,9 +189,38 @@
 #define ALLEGROA139X_COUNTS_UNIT_NAME "count"
 /// @brief Default variable short code; "AllegroA139xCounts"
 #define ALLEGROA139X_COUNTS_DEFAULT_CODE "AllegroA139xCounts"
-/**@}*/
 
 // 
+/// @brief Sensor variable number; Hall0 is stored in sensorValues[0].
+#define HALL0_VAR_NUM 0
+/// @brief Sensor variable number; Hall1 is stored in sensorValues[1].
+#define HALL1_VAR_NUM 1
+/// @brief Sensor variable number; Hall2 is stored in sensorValues[2].
+#define HALL2_VAR_NUM 2
+/// @brief Sensor variable number; Hall3 is stored in sensorValues[3].
+#define HALL3_VAR_NUM 3
+/// @brief Sensor variable number; Hall4 is stored in sensorValues[4].
+#define HALL4_VAR_NUM 4
+/// @brief Sensor variable number; Hall5 is stored in sensorValues[5].
+#define HALL5_VAR_NUM 5
+/// @brief Sensor variable number; Hall6 is stored in sensorValues[6].
+#define HALL6_VAR_NUM 6
+/// @brief Sensor variable number; Hall7 is stored in sensorValues[7].
+#define HALL7_VAR_NUM 7
+
+/// @brief Default variable short code;
+#define HALL0_DEFAULT_CODE "Hall0counts"
+#define HALL1_DEFAULT_CODE "Hall1counts"
+#define HALL2_DEFAULT_CODE "Hall2counts"
+#define HALL3_DEFAULT_CODE "Hall3counts"
+#define HALL4_DEFAULT_CODE "Hall4counts"
+#define HALL5_DEFAULT_CODE "Hall5counts"
+#define HALL6_DEFAULT_CODE "Hall6counts"
+#define HALL7_DEFAULT_CODE "Hall7counts"
+
+
+/**@}*/
+
 /* clang-format off */
 /**
  * @brief The Sensor sub-class for the AllegroA139x Hall effect sensor.
@@ -199,29 +228,6 @@
 /* clang-format on */
 class AllegroA139x : public Sensor {
  public:
-    /**
-     * @brief Construct a new AllegroA139x object to read one sensor
-     * 
-     *
-     * @param powerPin The pin on the mcu controlling power to the Allegro A139x
-     *   Use -1 if it is continuously powered.
-     * - The A139x sensors require a 2.5 - 3.5V power source
-     *  The Allegro A139x sensors have a SLEEP pin, which wakes the sensor when
-     *  pulled high, and puts it to sleep when pulled low. You may choose to connect
-     *  the sensor's Vcc pin to a constant 3V3 power source, and then connect the 
-     * SLEEP pin to one of the digital pins on the Mayfly to wake the sensor, and 
-     * name that digital pin here as the powerPin.
-     * @param dataPin The processor ADC port pin to read the voltage from the
-     * sensor.  Not all processor pins can be used as analog pins.  Those usable
-     * as analog pins generally are numbered with an "A" in front of the number
-     * - ie, A1.
-     * @param measurementsToAverage The number of measurements to take and
-     * average before giving a "final" result from the sensor; optional with a
-     * default value of 10.
-    //  */
-    // AllegroA139x(int8_t powerPin, int8_t dataPin,
-    //                 uint8_t measurementsToAverage = 4);
-
     /**
      * @brief Construct a new AllegroA139x object for use with the 8-channel Mayfly adapter board
      * 
@@ -235,7 +241,11 @@ class AllegroA139x : public Sensor {
      * and should allow for the designated sensor to be awakened/slept before and after each
      * reading. 
      * 
-     *
+     * @param gpio8 The PCA9557 object. The 8 output pins from this device are attached to the
+     * SLEEP lines on the AllegroA139x hall effect sensors. 
+     * @param gpio4 The PCA9536 object. The 4 pins from this device are attached to the
+     * address (channel selection) pins on the TMUX1208 multiplexer and the multiplexer's
+     * ENABLE pin. 
      * @param powerPin The pin on the mcu controlling power to the Allegro A139x
      *   Use -1 if it is continuously powered or you are controlling the SLEEP
      *   pin via a I2C port expander (PCA9557)
@@ -244,49 +254,17 @@ class AllegroA139x : public Sensor {
      * as analog pins generally are numbered with an "A" in front of the number
      * - ie, A0. The 8-channel adapter board sends data to the A0 pin of the Mayfly
      * by default.
-     * @param muxChannel The channel (0-7) that this A139x is attached to on the
-     * PCA9557 I2C port expander (controlling the SLEEP pin) and on the 
-     * TMUX1208 analog (de)multiplexer that will feed the A139x's voltage signal
-     * to the dataPin defined above. The TMUX1208 channel is set using the 
-     * Mayfly v1.1's onboard PCA9536 I2C port expander that is connected to the
-     * TMUX1208's channel selection pins (X0, X1, X2 of PCA9536 connected to A0, 
-     * A1, A2 on the TMUX1208). 
      * @param measurementsToAverage The number of measurements to take and
      * average before giving a "final" result from the sensor; optional with a
-     * default value of 10.
+     * default value of 1.
 
      */
-  //  AllegroA139x(int8_t powerPin, int8_t dataPin, uint8_t muxChannel = 0,
-  //                   uint8_t measurementsToAverage = 4
-  //                   );
-
-   // Version that passes pointers to existing 
-   // multiplexer objects 
-  //  AllegroA139x(PCA9557& gpio8, PCA9536& gpio4, uint8_t muxChannel,
-  //                   int8_t powerPin, int8_t dataPin,
-  //                   uint8_t measurementsToAverage = 4
-  //                   );
-    // Version without pointers, just references to PCA9557, PCA9536 objects
-    AllegroA139x(PCA9557 gpio8, PCA9536 gpio4, uint8_t muxChannel,
+    // Pass references to PCA9557, PCA9536 objects to run those multiplexers
+    AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
                 int8_t powerPin, int8_t dataPin,
-                uint8_t measurementsToAverage = 4
+                uint8_t measurementsToAverage = 1
                 );
 
-
-
-    /**
-     * @brief Construct a new AllegroA139x object with pins 
-     * for the EnviroDIY Mayfly 1.x.
-     *
-     * This is a short-cut constructor to help users of our own board so they
-     * can change the number of readings without changing other arguments or
-     * enter no arguments at all.
-     *
-     * @param measurementsToAverage The number of measurements to take and
-     * average before giving a "final" result from the sensor; optional with a
-     * default value of 10.
-     */
-    // explicit AllegroA139x(uint8_t measurementsToAverage = 4);
     /**
      * @brief Destroy the AllegroA139x object - no action needed.
      */
@@ -298,6 +276,15 @@ class AllegroA139x : public Sensor {
     bool setup(void) override;
 
     /**
+     * @brief Disable the TMUX1208 multiplexer using PCA9536.
+     * 
+     * The ENable line on the TMUX1208 on the Mayfly adapter board is
+     * hooked to pin X3 of the Mayfly's onboard PCA9536. This function
+     * will pull that pin low to disable the TMUX1208.
+     */
+    void disableTMUX1208(PCA9536 mux);
+
+    /**
      * @copydoc Sensor::addSingleMeasurementResult()
      */
     bool addSingleMeasurementResult(void) override;
@@ -306,39 +293,103 @@ class AllegroA139x : public Sensor {
     // instead of the Base Sensor class's addSingleMeasurementResult()
     // generic function. 
 
+     /**
+     * @brief Activate a channel (0-7) on the TMUX1208 using the PCA9536
+     * 
+     * The address lines on the TMUX1208 on the Mayfly adapter board are
+     * hooked to pins X0,X1,X2 of the Mayfly's onboard PCA9536. This function
+     * will set those address lines to activate the chosen channel (0-7)
+     */
+    void setPCA9536channel(uint8_t channel, PCA9536 mux);
+
  private:
-   uint8_t _muxChannel; // used to let the PCA9557/PCA9536 which channel you want
-  //  PCA9557* _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
-  //  PCA9536* _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
-   // LPM: This may work better as:
-  //  PCA9557& _pca9557; // Create PCA9557 object, used to twiddle the PCA9557
-  //  PCA9536& _pca9536; // Create PCA9536 object, used to twiddle the PCA9536
   PCA9557 _pca9557;  // Create private version of PCA9557 object
   PCA9536 _pca9536;  // Create private version of PCA9536 object
-  PCA9557_pin_t _pca9557_pin; 
-
-    /**
-     * @brief Update the pins on PCA9536 to select a channel on the TMUX1208 multiplexer
-     *
-     * @param channel The desired channel to read on the TMUX1208 multiplexer (valid values 0-7)
-     * 
-     * @param gpio4 The PCA9536 object. The 4 pins from this device are attached to the
-     * address (channel selection) pins on the TMUX1208 multiplexer and the multiplexer's
-     * ENABLE pin. 
-     */
-  void setPCA9536channel(uint8_t channel, PCA9536 gpio4); 
-
-      /**
-     * @brief Set pin 3 low on PCA9536 to disable the TMUX1208 multiplexer
-     *
-     * @param gpio4 The PCA9536 object
-     */
-  void disableTMUX1208(PCA9536 gpio4);
-    
-
-
 };
 
+
+class Hall0_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall0_Count(AllegroA139x* parentSense,
+                           const char* uuid = "", 
+                           const char* varCode = HALL0_DEFAULT_CODE) 
+         : Variable(parentSense, (const uint8_t)HALL0_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+  
+
+    /**
+     * @brief Destroy the Hall0 object - no action needed.
+     */
+    ~Hall0_Count() {}
+      
+};
+
+
+class Hall1_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall1_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL1_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL1_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall1_Count() {}
+      
+};
+
+class Hall2_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall2_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL2_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL2_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall2_Count() {}
+      
+};
 
 /* clang-format off */
 /**
