@@ -131,15 +131,17 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
 
             int32_t rawAnalog = 0;
             analogRead(_dataPin); // throw away 1st reading
+            // Take 4 readings in a row
             for (byte j = 0; j<4; j++){
                 sensor_adc = analogRead(_dataPin);
                 rawAnalog = rawAnalog + sensor_adc;
-                delayMicroseconds(50);
                 MS_DEEP_DBG("  ADC Bits:", sensor_adc);
             }
             // Do a 2-bit right shift to divide rawAnalog
             // by 4 to get the average of the 4 readings
             rawAnalog = rawAnalog >> 2;   
+
+            // If all values are 0, rewrite rawAnalog to be the -9999 error value
             if (0 == rawAnalog) {
                 // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
                 rawAnalog = -9999;
