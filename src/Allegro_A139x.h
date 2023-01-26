@@ -330,7 +330,7 @@ class Hall0_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-      /**
+     /**
      * @brief Construct a new Hall0_Count object.
      *
      * @note This must be tied with a parent AllegroA139x before it can be used.
@@ -361,13 +361,23 @@ class Hall1_Count : public Variable {
      * @param varCode A short code to help identify the variable in files;
      * optional with a default value of "AllegroA139x".
      */
-      explicit Hall1_Count(AllegroA139x* parentSense,
+    explicit Hall1_Count(AllegroA139x* parentSense,
                            const char* uuid = "",
                            const char* varCode = HALL1_DEFAULT_CODE)
          : Variable(parentSense, (const uint8_t)HALL1_VAR_NUM,
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
+     /**
+     * @brief Construct a new Hall1_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall1_Count()
+        : Variable((const uint8_t) HALL1_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL1_DEFAULT_CODE) {}                     
 
     /**
      * @brief Destroy the Hall1 object - no action needed.
@@ -395,9 +405,18 @@ class Hall2_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall2_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall2_Count()
+        : Variable((const uint8_t) HALL2_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL2_DEFAULT_CODE) {}    
     /**
-     * @brief Destroy the Hall1 object - no action needed.
+     * @brief Destroy the Hall2 object - no action needed.
      */
     // ~Hall2_Count() {}
       
@@ -422,9 +441,18 @@ class Hall3_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall3_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall3_Count()
+        : Variable((const uint8_t) HALL3_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL3_DEFAULT_CODE) {}    
     /**
-     * @brief Destroy the Hall1 object - no action needed.
+     * @brief Destroy the Hall3 object - no action needed.
      */
     // ~Hall3_Count() {}
       
@@ -449,9 +477,18 @@ class Hall4_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall4_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall4_Count()
+        : Variable((const uint8_t) HALL4_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL4_DEFAULT_CODE) {}    
     /**
-     * @brief Destroy the Hall1 object - no action needed.
+     * @brief Destroy the Hall4 object - no action needed.
      */
     // ~Hall4_Count() {}
       
@@ -476,9 +513,18 @@ class Hall5_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall5_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall5_Count()
+        : Variable((const uint8_t) HALL5_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL5_DEFAULT_CODE) {}    
     /**
-     * @brief Destroy the Hall1 object - no action needed.
+     * @brief Destroy the Hall5 object - no action needed.
      */
     // ~Hall5_Count() {}
       
@@ -503,7 +549,16 @@ class Hall6_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall6_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall6_Count()
+        : Variable((const uint8_t) HALL6_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL6_DEFAULT_CODE) {}    
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
@@ -530,7 +585,16 @@ class Hall7_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-
+     /**
+     * @brief Construct a new Hall7_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall7_Count()
+        : Variable((const uint8_t) HALL7_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL7_DEFAULT_CODE) {}    
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
@@ -581,8 +645,6 @@ class AllegroA139x_Counts : public Variable {
      */
     ~AllegroA139x_Counts() {}
 };
-
-
 
 
 
