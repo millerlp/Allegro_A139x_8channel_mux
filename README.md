@@ -7,8 +7,8 @@ Luke Miller 2023
  library relies on the presence of a PCA9557 I2C expander to toggle the individual
  sleep lines on 8 Allegro A139x hall effect sensors, and then uses the Mayfly's 
  onboard PCA9536 I2C expander to manipulate the address pins on a TMUX1208
- analog multiplexer on the adapter board, to route the voltage output from a
- single A139x sensor to the Mayfly's onboard ADC (via Mayfly's analog input pin A0). 
+ analog multiplexer on the adapter board, to route the voltage output from each A139x 
+ sensor to the Mayfly's onboard ADC (via Mayfly's analog input pin A0). 
  
  This library is built to be compatible with the EnviroDIY ModularSensors
  library framework. https://github.com/EnviroDIY/ModularSensors
