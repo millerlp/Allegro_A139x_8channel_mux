@@ -1,10 +1,10 @@
 /**
  * @file Allegro_A139x_Hall_effect.cpp
- * @copyright 2017-2022 Stroud Water Research Center
- * Part of the EnviroDIY ModularSensors library for Arduino
- * @author Sara Geleskie Damiano <sdamiano@stroudcenter.org>
+ * @copyright 2022-2023 Luke Miller
+ * A branch of the EnviroDIY ModularSensors library for Arduino
+ * @author Luke Miller <contact@lukemiller.org>
  *
- * @brief Implements the Allegro_A139x class
+ * @brief Implements the Allegro_A139x Hall effect 8-channel multiplexed sensor class
  */
 
 #include "Allegro_A139x.h"
@@ -28,7 +28,9 @@
 //              ALLEGROA139X_MEASUREMENT_TIME_MS, powerPin, dataPin,
 //              measurementsToAverage) {}
 
-
+// The constructor
+// For an 8-channel multiplexed set of Allegro A139x analog Hall effect sensors on 
+// an adapter attached to an EnviroDIY Mayfly v1.1
 AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
                     int8_t powerPin, int8_t dataPin,
                     uint8_t measurementsToAverage
@@ -42,13 +44,7 @@ AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
              
 AllegroA139x::~AllegroA139x() {}
 
-// LPM: Modeled on AOSongDHT.cpp setup
-// The question is whether is an efficient way to accomplish
-// this, because it's potentially going to be used to create 8 
-// redundant _pca9557 objects if you have 8 Hall sensor objects
-// It may be more sensible to figure out how to pass a pointer to
-// an existing PCA9557 object created outside the Hall sensor library
-// and then interact with that via the _muxChannel variable
+
 bool AllegroA139x::setup(void) {
     // Set up the PCA9557 multiplexer to output signals, and set all outputs LOW initially
     _pca9557.setPolarity(IO_NON_INVERTED);
@@ -65,8 +61,6 @@ bool AllegroA139x::setup(void) {
         // pinMode can be used to set an I/O as OUTPUT or INPUT
         _pca9536.pinMode(i, OUTPUT);
     }
-
-
     return Sensor::setup();  // this will set pin modes and the setup status bit
 }
 

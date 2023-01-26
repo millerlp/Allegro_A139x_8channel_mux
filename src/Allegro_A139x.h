@@ -1,8 +1,8 @@
 /**
- * Based off of EverlightALSPT19.h, modified by Luke Miller to read Allegro A139x Hall effect sensors
- * @copyright 2017-2022 Stroud Water Research Center
- * Part of the EnviroDIY ModularSensors library for Arduino
- * @author Sara Geleskie Damiano <sdamiano@stroudcenter.org>
+ * @file Allegro_A139x_Hall_effect.h
+ * @copyright 2022-2023 Luke Miller
+ * A branch of the EnviroDIY ModularSensors library for Arduino
+ * @author Luke Miller <contact@lukemiller.org>
  *
  * @brief Take readings from Allegro A1395, A1393, A1391 Hall effect sensors
  * via the onboard ADC
@@ -19,7 +19,7 @@
  * @m_footernavigation
  *
  * @section sensor_allegroa139x_notes Quick Notes
- * - A simple analog Hall effect sensor
+ * - A simple multiplexed analog Hall effect sensor 
  * - Requires a 2.5 - 3.5V power source
  *
  * @section sensor_allegroa139x_datasheet Sensor Datasheet
@@ -29,11 +29,6 @@
  * {{ @ref AllegroA139x::AllegroA139x(uint8_t) }}
  * {{ @ref AllegroA139x::AllegroA139x(int8_t, int8_t, uint8_t) }}
  *
- * @section sensor_alspt19_examples Example Code
- *
- * The ALS-PT19 is used in the @menulink{everlight_alspt19} example
- *
- * @menusnip{everlight_alspt19}
  */
 /* clang-format on */
 
@@ -327,7 +322,16 @@ class Hall0_Count : public Variable {
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
                      varCode, uuid) {}
-  
+      /**
+     * @brief Construct a new Hall0_Count object.
+     *
+     * @note This must be tied with a parent AllegroA139x before it can be used.
+     */
+    Hall0_Count()
+        : Variable((const uint8_t) HALL0_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                    HALL0_DEFAULT_CODE) {}
 
     /**
      * @brief Destroy the Hall0 object - no action needed.
@@ -390,6 +394,142 @@ class Hall2_Count : public Variable {
     ~Hall2_Count() {}
       
 };
+
+class Hall3_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall3_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL3_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL3_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall3_Count() {}
+      
+};
+
+class Hall4_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall4_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL4_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL4_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall4_Count() {}
+      
+};
+
+class Hall5_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall5_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL5_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL5_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall5_Count() {}
+      
+};
+
+class Hall6_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall6_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL6_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL6_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall6_Count() {}
+      
+};
+
+class Hall7_Count : public Variable {
+   public: 
+     /**
+     * @brief Construct a new hall effect sensor object.
+     *
+     * @param parentSense The parent AllegroA139x providing the result
+     * values.
+     * @param uuid A universally unique identifier (UUID or GUID) for the
+     * variable; optional with the default value of an empty string.
+     * @param varCode A short code to help identify the variable in files;
+     * optional with a default value of "AllegroA139x".
+     */
+      explicit Hall7_Count(AllegroA139x* parentSense,
+                           const char* uuid = "",
+                           const char* varCode = HALL7_DEFAULT_CODE)
+         : Variable(parentSense, (const uint8_t)HALL7_VAR_NUM,
+                    (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
+                    ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
+                     varCode, uuid) {}
+
+    /**
+     * @brief Destroy the Hall1 object - no action needed.
+     */
+    ~Hall7_Count() {}
+      
+};
+
 
 /* clang-format off */
 /**
