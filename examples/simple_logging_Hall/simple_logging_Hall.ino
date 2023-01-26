@@ -1,29 +1,7 @@
-/** =========================================================================
- *  
- *  
- * @file simple_logging_Hall.ino
- * @brief A simple data logging example to read raw ADC counts from an
- * Allegro A139x series Hall effect sensor. Modified by Luke Miller
- *
- * @author Sara Geleskie Damiano <sdamiano@stroudcenter.org>
- * @copyright (c) 2017-2022 Stroud Water Research Center (SWRC)
- *                          and the EnviroDIY Development Team
- *            This example is published under the BSD-3 license.
- *
- * Build Environment: Visual Studios Code with PlatformIO
- * Hardware Platform: EnviroDIY Mayfly Arduino Datalogger
- * 
- * See https://github.com/millerlp/Allegro_A139x_Hall_effect for the sensor library
- *
- * DISCLAIMER:
- * THIS CODE IS PROVIDED "AS IS" - NO WARRANTY IS GIVEN.
- * ======================================================================= */
+// This is designed to work with a EnviroDIY Mayfly v1.1 and adapter board
+// carrying a PCA9557 I2C port expander, TMUX1208 analog multiplexer, and 
+// hook ups for 8 Allegro A1395 (or A1393 or A1391) hall effect sensors
 
-// ==========================================================================
-//  Include the libraries required for any data logger
-// ==========================================================================
-/** Start [includes] */
-// The Arduino library is needed for every Arduino program.
 #include <Arduino.h>
 
 // EnableInterrupt is used by ModularSensors for external and pin change
@@ -32,15 +10,13 @@
 
 // Include the main header for ModularSensors
 #include <ModularSensors.h>
-/** End [includes] */
-
 
 // ==========================================================================
 //  Data Logging Options
 // ==========================================================================
 /** Start [logging_options] */
 // The name of this program file
-const char* sketchName = "simple_logging_Hall.ino";
+const char* sketchName = "mayfly_adapter_hall_mux_test.ino";
 // Logger ID, also becomes the prefix for the name of the data file on SD card
 const char* LoggerID = "Mayfly002";
 // How frequently (in minutes) to log data
@@ -49,22 +25,16 @@ const uint8_t loggingInterval = 1;
 const int8_t timeZone = -8;  // Pacific Standard Time
 // NOTE:  Daylight savings time will not be applied!  Please use standard time!
 
-// Set the input and output pins for the logger
-// NOTE:  Use -1 for pins that do not apply
+
 const int32_t serialBaud = 57600;  // Baud rate for debugging
 const int8_t  greenLED   = 8;       // Pin for the green LED
 const int8_t  redLED     = 9;       // Pin for the red LED
 const int8_t  buttonPin  = 21;      // Pin for debugging mode (ie, button pin)
 const int8_t  wakePin    = 31;  // MCU interrupt/alarm pin to wake from sleep
-// Mayfly 0.x D31 = A7
-// Set the wake pin to -1 if you do not want the main processor to sleep.
-// In a SAMD system where you are using the built-in rtc, set wakePin to 1
+
 const int8_t sdCardPwrPin   = -1;  // MCU SD card power pin
 const int8_t sdCardSSPin    = 12;  // SD card chip select/slave select pin
 const int8_t sensorPowerPin = 22;  // MCU pin controlling main sensor power
-/** End [logging_options] */
-
-
 // ==========================================================================
 //  Using the Processor as a Sensor
 // ==========================================================================
@@ -76,16 +46,65 @@ const char*    mcuBoardVersion = "v1.1";
 ProcessorStats mcuBoard(mcuBoardVersion);
 /** End [processor_sensor] */
 
-
 // ==========================================================================
 //  Maxim DS3231 RTC (Real Time Clock)
 // ==========================================================================
 /** Start [ds3231] */
-#include <sensors/MaximDS3231.h>  // Includes wrapper functions for Maxim DS3231 RTC
+#include "sensors/MaximDS3231.h"
 
-// Create a DS3231 sensor object, using this constructor function:
+// Create a DS3231 sensor object
 MaximDS3231 ds3231(1);
 /** End [ds3231] */
+
+// ==========================================================================
+// PCA9557 8-channel port expander, I2C controlled
+//
+//  This is hooked to the SLEEP lines of 8 Hall effect transducers on the 
+//  Mayfly adapter board RevA. Pulling a pin connected to a SLEEP pin HIGH
+//  will wake the sensor, and pulling it low will put the sensor to sleep.
+//  =========================================================================
+
+// This PCA9557 should now be created as a private object within the
+// Allegro_A139x.h library. Unless I do the version of the library
+// that takes gpio8 and gpio4 as pointers to the 
+// AllegroA139x objects
+#include <PCA9557.h>  // https://github.com/millerlp/PCA9557
+
+PCA9557 gpio8;
+
+// ===========================================================================
+// PCA9536 4-channel port expander
+// ===========================================================================
+/* The device's fixed I2C address is be 0x41 
+    PC9536 has 4 pins that can be set as outputs. This library addresses each
+    of them separately, so you sent a pin number and a value (HIGH or LOW)
+    On the Mayfly adapter, this chip is attached to the address lines of the
+    TMUX1208 analog multiplexer that will read the 8 Hall effect sensors
+
+    ------------------------------
+    PC9536 Pin      TMUX1208 Pin
+        0               A0
+        1               A1
+        2               A2
+        3               EN - active high; pulling low disables TMUX1208
+
+    ---------------------------------------
+    Truth table for TMUX1208 - Pulling EN low disables all channels
+    A2      A1      A0      Active channel
+    0       0       0           S1
+    0       0       1           S2
+    0       1       0           S3
+    0       1       1           S4
+    1       0       0           S5
+    1       0       1           S6
+    1       1       0           S7
+    1       1       1           S8
+
+*/
+#include <SparkFun_PCA9536_Arduino_Library.h>
+
+PCA9536 gpio4;
+
 
 // ==========================================================================
 //  Allegro A139x Hall effect sensor
@@ -101,34 +120,25 @@ MaximDS3231 ds3231(1);
  *  ADC value (0-1023). 
 
 */
-#include <Allegro_A139x.h> // https://github.com/millerlp/Allegro_A139x_Hall_effect
+#include <Allegro_A139x_8channel_mux.h> // https://github.com/millerlp/Allegro_A139x_8channel_mux 
 
 
 // NOTE: Use -1 for any pins that don't apply or aren't being used.
-const int8_t  hallPower      = -1;    // Power pin 
-const int8_t  hallData       = A3;    // Analog 3 pin
-const uint8_t hallNumberReadings = 4;
+// The Allegro A139x sensors have a SLEEP pin, which wakes the sensor when 
+// pulled high, and puts it to sleep when pulled low. You may choose to connect
+// the sensor's Vcc pin to a constant 3V3 power source, and then connect the 
+// SLEEP pin to one of the digital pins on the Mayfly to wake the sensor.
+const int8_t  hallPower      = -1;    // Power pin (or put the SLEEP pin number here)
+const int8_t  hallData       = A0;    // Analog 0 pin
+const uint8_t hallNumberReadings = 1;
 
-// Create a Everlight Allegro A139x hall effect sensor object
-AllegroA139x hall1(hallPower, hallData, hallNumberReadings);
-
-
-// Create ADC counts pointer for the Allegro A1395 sensor
-Variable* hall1Count = new AllegroA139x_Counts(
-    &hall1, "12345678-abcd-1234-ef00-1234567890ab");
-
+// LPM: Version where I pass the PCA9557 and PCA9536
+// objects - Needs testing
+// Form of AllegroA139x hall(gpio8, gpio4, hallPower, hallData, hallNumberReadings);
+AllegroA139x hallMUX(gpio8, gpio4, hallPower, hallData, hallNumberReadings);
+       
 /** End [allegroa139x] */
 
-// ==========================================================================
-//    Settings for Additional Sensors
-// ==========================================================================
-// Additional sensors can setup here, similar to the RTC, but only if
-//   they have been supported with ModularSensors wrapper functions. See:
-//   https://github.com/EnviroDIY/ModularSensors/wiki#just-getting-started
-// Syntax for the include statement and constructor function for each sensor is
-// at
-//   https://github.com/EnviroDIY/ModularSensors/wiki#these-sensors-are-currently-supported
-//   or can be copied from the `menu_a_la_carte.ino` example
 
 
 // ==========================================================================
@@ -140,7 +150,14 @@ Variable* variableList[] = {
     new ProcessorStats_FreeRam(&mcuBoard),
     new ProcessorStats_Battery(&mcuBoard), 
     new MaximDS3231_Temp(&ds3231),
-    new AllegroA139x_Counts(&hall1)
+    new Hall0_Count(&hallMUX, "02345678-abcd-1234-ef00-1234567890ab"),
+    new Hall1_Count(&hallMUX, "12345678-abcd-1234-ef00-1234567890ab"),
+    new Hall2_Count(&hallMUX, "22345678-abcd-1234-ef00-1234567890ab"),
+    new Hall3_Count(&hallMUX, "32345678-abcd-1234-ef00-1234567890ab"),
+    new Hall4_Count(&hallMUX, "42345678-abcd-1234-ef00-1234567890ab"),
+    new Hall5_Count(&hallMUX, "52345678-abcd-1234-ef00-1234567890ab"),
+    new Hall6_Count(&hallMUX, "62345678-abcd-1234-ef00-1234567890ab"),
+    new Hall7_Count(&hallMUX, "72345678-abcd-1234-ef00-1234567890ab")
     // Additional sensor variables can be added here, by copying the syntax
     //   for creating the variable pointer (FORM1) from the
     //   `menu_a_la_carte.ino` example
@@ -152,7 +169,6 @@ int variableCount = sizeof(variableList) / sizeof(variableList[0]);
 // Create the VariableArray object
 VariableArray varArray;
 /** End [variable_arrays] */
-
 
 // ==========================================================================
 //  The Logger Object[s]
@@ -179,14 +195,22 @@ void greenredflash(uint8_t numFlash = 4, uint8_t rate = 75) {
     }
     digitalWrite(redLED, LOW);
 }
-/** End [working_functions] */
 
 
-// ==========================================================================
-//  Arduino Setup Function
-// ==========================================================================
-/** Start [setup] */
+
+// End of working functions
+//===========================================================================
+
 void setup() {
+  // Wait for USB connection to be established by PC
+    // NOTE:  Only use this when debugging - if not connected to a PC, this
+    // could prevent the script from starting
+    #if defined SERIAL_PORT_USBVIRTUAL
+        while (!SERIAL_PORT_USBVIRTUAL && (millis() < 10000)) {
+            // wait
+        }
+    #endif
+
     // Start the primary serial connection
     Serial.begin(serialBaud);
 
@@ -222,9 +246,14 @@ void setup() {
     varArray.begin(variableCount, variableList);
     dataLogger.begin(LoggerID, loggingInterval, &varArray);
 
+    // Set up the hall effect multiplexers (PCA9557 and PCA9536)
+    hallMUX.setup();
+    
+
     // Set up the sensors
     Serial.println(F("Setting up sensors..."));
     varArray.setupSensors();
+    
 
     // Create the log file, adding the default header to it
     // Do this last so we have the best chance of getting the time correct and
@@ -233,15 +262,13 @@ void setup() {
 
     // Call the processor sleep
     dataLogger.systemSleep();
+
 }
-/** End [setup] */
 
-
-// ==========================================================================
-//  Arduino Loop Function
-// ==========================================================================
-/** Start [loop] */
 void loop() {
+
     dataLogger.logData();
+
+
 }
-/** End [loop] */
+  
