@@ -88,7 +88,9 @@ void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
     }
 }
 
-
+void AllegroA139x::disableTMUX1208(PCA9536 mux){
+    mux.write(3, LOW); // Pulls the X3 pin low on the PCA9536, putting low on the attached TMUX1208 ENable pin
+}
 
 bool AllegroA139x::setup(void) {
     // Set up the PCA9557 multiplexer to output signals, and set all outputs LOW initially
@@ -110,9 +112,7 @@ bool AllegroA139x::setup(void) {
 }
 
 
-void AllegroA139x::disableTMUX1208(PCA9536 mux){
-    mux.write(3, LOW); // Pulls the X3 pin low on the PCA9536, putting low on the attached TMUX1208 ENable pin
-}
+
 
 
 bool AllegroA139x::addSingleMeasurementResult(void) {

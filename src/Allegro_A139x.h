@@ -312,7 +312,7 @@ class AllegroA139x : public Sensor {
  */
 /* clang-format on */
 class Hall0_Count : public Variable {
-   public: 
+  public: 
      /**
      * @brief Construct a new hall effect sensor object.
      *
@@ -344,7 +344,7 @@ class Hall0_Count : public Variable {
     /**
      * @brief Destroy the Hall0 object - no action needed.
      */
-    ~Hall0_Count() {}
+    // ~Hall0_Count() {}
       
 };
 
@@ -372,7 +372,7 @@ class Hall1_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall1_Count() {}
+    // ~Hall1_Count() {}
       
 };
 
@@ -399,7 +399,7 @@ class Hall2_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall2_Count() {}
+    // ~Hall2_Count() {}
       
 };
 
@@ -426,7 +426,7 @@ class Hall3_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall3_Count() {}
+    // ~Hall3_Count() {}
       
 };
 
@@ -453,7 +453,7 @@ class Hall4_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall4_Count() {}
+    // ~Hall4_Count() {}
       
 };
 
@@ -480,7 +480,7 @@ class Hall5_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall5_Count() {}
+    // ~Hall5_Count() {}
       
 };
 
@@ -507,7 +507,7 @@ class Hall6_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall6_Count() {}
+    // ~Hall6_Count() {}
       
 };
 
@@ -534,7 +534,7 @@ class Hall7_Count : public Variable {
     /**
      * @brief Destroy the Hall1 object - no action needed.
      */
-    ~Hall7_Count() {}
+    // ~Hall7_Count() {}
       
 };
 
