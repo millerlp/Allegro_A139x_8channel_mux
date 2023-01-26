@@ -44,6 +44,51 @@ AllegroA139x::AllegroA139x(PCA9557 gpio8, PCA9536 gpio4,
              
 AllegroA139x::~AllegroA139x() {}
 
+void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
+    if (channel == 0) {
+        mux.write(0, LOW);
+        mux.write(1, LOW);
+        mux.write(2, LOW);
+        mux.write(3, HIGH); // Pull high to ENable the attached TMUX1208 multiplexer
+    } else if (channel == 1) {
+        mux.write(0, HIGH);
+        mux.write(1, LOW);
+        mux.write(2, LOW);
+        mux.write(3, HIGH);
+    } else if (channel == 2) {
+        mux.write(0, LOW);
+        mux.write(1, HIGH);
+        mux.write(2, LOW);
+        mux.write(3, HIGH);
+    } else if (channel == 3) {
+        mux.write(0, HIGH);
+        mux.write(1, HIGH);
+        mux.write(2, LOW);
+        mux.write(3, HIGH);
+    } else if (channel == 4) {
+        mux.write(0, LOW);
+        mux.write(1, LOW);
+        mux.write(2, HIGH);
+        mux.write(3, HIGH);        
+    } else if (channel == 5) {
+        mux.write(0, HIGH);
+        mux.write(1, LOW);
+        mux.write(2, HIGH);
+        mux.write(3, HIGH);        
+    } else if (channel == 6) {
+        mux.write(0, LOW);
+        mux.write(1, HIGH);
+        mux.write(2, HIGH);
+        mux.write(3, HIGH);        
+    } else if (channel == 7) {
+        mux.write(0, HIGH);
+        mux.write(1, HIGH);
+        mux.write(2, HIGH);
+        mux.write(3, HIGH);        
+    }
+}
+
+
 
 bool AllegroA139x::setup(void) {
     // Set up the PCA9557 multiplexer to output signals, and set all outputs LOW initially
@@ -66,7 +111,7 @@ bool AllegroA139x::setup(void) {
 
 
 void AllegroA139x::disableTMUX1208(PCA9536 mux){
-    mux.write(3, LOW); // Pulls the X3 pin low on the PCA9536 low on the attached TMUX1208 ENable pin
+    mux.write(3, LOW); // Pulls the X3 pin low on the PCA9536, putting low on the attached TMUX1208 ENable pin
 }
 
 
@@ -155,46 +200,3 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
     return true;
 }
 
-void AllegroA139x::setPCA9536channel(uint8_t channel, PCA9536 mux) {
-    if (channel == 0) {
-        mux.write(0, LOW);
-        mux.write(1, LOW);
-        mux.write(2, LOW);
-        mux.write(3, HIGH); // Pull high to ENable the attached TMUX1208 multiplexer
-    } else if (channel == 1) {
-        mux.write(0, HIGH);
-        mux.write(1, LOW);
-        mux.write(2, LOW);
-        mux.write(3, HIGH);
-    } else if (channel == 2) {
-        mux.write(0, LOW);
-        mux.write(1, HIGH);
-        mux.write(2, LOW);
-        mux.write(3, HIGH);
-    } else if (channel == 3) {
-        mux.write(0, HIGH);
-        mux.write(1, HIGH);
-        mux.write(2, LOW);
-        mux.write(3, HIGH);
-    } else if (channel == 4) {
-        mux.write(0, LOW);
-        mux.write(1, LOW);
-        mux.write(2, HIGH);
-        mux.write(3, HIGH);        
-    } else if (channel == 5) {
-        mux.write(0, HIGH);
-        mux.write(1, LOW);
-        mux.write(2, HIGH);
-        mux.write(3, HIGH);        
-    } else if (channel == 6) {
-        mux.write(0, LOW);
-        mux.write(1, HIGH);
-        mux.write(2, HIGH);
-        mux.write(3, HIGH);        
-    } else if (channel == 7) {
-        mux.write(0, HIGH);
-        mux.write(1, HIGH);
-        mux.write(2, HIGH);
-        mux.write(3, HIGH);        
-    }
-}

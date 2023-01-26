@@ -265,10 +265,14 @@ class AllegroA139x : public Sensor {
      */
     ~AllegroA139x();
 
-    /**
-     * @copydoc Sensor::setup()
+         /**
+     * @brief Activate a channel (0-7) on the TMUX1208 using the PCA9536
+     * 
+     * The address lines on the TMUX1208 on the Mayfly adapter board are
+     * hooked to pins X0,X1,X2 of the Mayfly's onboard PCA9536. This function
+     * will set those address lines to activate the chosen channel (0-7)
      */
-    bool setup(void) override;
+    void setPCA9536channel(uint8_t channel, PCA9536 mux);
 
     /**
      * @brief Disable the TMUX1208 multiplexer using PCA9536.
@@ -280,6 +284,11 @@ class AllegroA139x : public Sensor {
     void disableTMUX1208(PCA9536 mux);
 
     /**
+     * @copydoc Sensor::setup()
+     */
+    bool setup(void) override;
+
+    /**
      * @copydoc Sensor::addSingleMeasurementResult()
      */
     bool addSingleMeasurementResult(void) override;
@@ -288,14 +297,7 @@ class AllegroA139x : public Sensor {
     // instead of the Base Sensor class's addSingleMeasurementResult()
     // generic function. 
 
-     /**
-     * @brief Activate a channel (0-7) on the TMUX1208 using the PCA9536
-     * 
-     * The address lines on the TMUX1208 on the Mayfly adapter board are
-     * hooked to pins X0,X1,X2 of the Mayfly's onboard PCA9536. This function
-     * will set those address lines to activate the chosen channel (0-7)
-     */
-    void setPCA9536channel(uint8_t channel, PCA9536 mux);
+
 
  private:
   PCA9557 _pca9557;  // Create private version of PCA9557 object
@@ -315,7 +317,7 @@ class Hall0_Count : public Variable {
      * @param varCode A short code to help identify the variable in files;
      * optional with a default value of "AllegroA139x".
      */
-      explicit Hall0_Count(AllegroA139x* parentSense,
+    explicit Hall0_Count(AllegroA139x* parentSense,
                            const char* uuid = "", 
                            const char* varCode = HALL0_DEFAULT_CODE) 
          : Variable(parentSense, (const uint8_t)HALL0_VAR_NUM,
@@ -327,7 +329,7 @@ class Hall0_Count : public Variable {
      *
      * @note This must be tied with a parent AllegroA139x before it can be used.
      */
-    Hall0_Count()
+      Hall0_Count()
         : Variable((const uint8_t) HALL0_VAR_NUM,
                     (uint8_t)ALLEGROA139X_COUNTS_RESOLUTION,
                     ALLEGROA139X_COUNTS_VAR_NAME, ALLEGROA139X_COUNTS_UNIT_NAME,
