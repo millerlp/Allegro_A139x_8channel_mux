@@ -50,10 +50,10 @@
 #include "ModSensorDebugger.h"
 #undef MS_DEBUGGING_STD
 #undef MS_DEBUGGING_DEEP
-#include "VariableBase.h"
-#include "SensorBase.h"
 #include "PCA9557.h"
 #include "SparkFun_PCA9536_Arduino_Library.h"
+#include "VariableBase.h"
+#include "SensorBase.h"
 
 /** @ingroup sensor_allegroA139x */
 /**@{*/
