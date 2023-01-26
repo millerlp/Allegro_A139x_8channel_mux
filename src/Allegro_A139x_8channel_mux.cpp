@@ -119,7 +119,7 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
         analogReference(ALLEGROA139X_ADC_REFERENCE_MODE);
         MS_DBG(getSensorNameAndLocation(), F("is reporting:"));
         
-        for (int i = 0; i<=7; i++){
+        for (int i = 0; i<8; i++){
             // Set the appropriate multiplexer channels
             // Wake the A139x hall sensor by pulling the appropriate channel's pin PCA9557 high
             _pca9557.setState((PCA9557_pin_t)i, IO_HIGH); 
@@ -128,22 +128,43 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
             delayMicroseconds(60); 
             // First measure the analog voltage.
             // The return value from analogRead() is IN BITS NOT IN VOLTS!!
-            // Take a priming reading.
-            // First reading will be low - discard
-            analogRead(_dataPin);
-            // Take the reading we'll keep
-            sensor_adc = analogRead(_dataPin);
-            MS_DEEP_DBG("  ADC Bits:", sensor_adc);
 
-            if (0 == sensor_adc) {
+            int32_t rawAnalog = 0;
+            analogRead(_dataPin); // throw away 1st reading
+            for (byte j = 0; j<4; j++){
+                sensor_adc = analogRead(_dataPin);
+                rawAnalog = rawAnalog + sensor_adc;
+                delayMicroseconds(50);
+                MS_DEEP_DBG("  ADC Bits:", sensor_adc);
+            }
+            // Do a 2-bit right shift to divide rawAnalog
+            // by 4 to get the average of the 4 readings
+            rawAnalog = rawAnalog >> 2;   
+            if (0 == rawAnalog) {
                 // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
-                sensor_adc = -9999;
+                rawAnalog = -9999;
             }
             MS_DBG(F(" Channel: "), i);
             MS_DBG(F("  Counts:"), sensor_adc);
+            // Write this channel's count value into the hallVals array
+            hallVals[i] = rawAnalog;
+
+            // // Take a priming reading.
+            // // First reading will be low - discard
+            // analogRead(_dataPin);
+            // // Take the reading we'll keep
+            // sensor_adc = analogRead(_dataPin);
+            // MS_DEEP_DBG("  ADC Bits:", sensor_adc);
+
+            // if (0 == sensor_adc) {
+            //     // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
+            //     sensor_adc = -9999;
+            // }
+            // MS_DBG(F(" Channel: "), i);
+            // MS_DBG(F("  Counts:"), sensor_adc);
 
             // Write this channel's count value into the hallVals array
-            hallVals[i] = sensor_adc;
+            // hallVals[i] = sensor_adc;
 
             // Set the PCA9557 multiplexer to turn off (sleep) the Hall effect sensor
             _pca9557.setState((PCA9557_pin_t)i, IO_LOW);
