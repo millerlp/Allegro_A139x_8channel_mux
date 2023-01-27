@@ -122,7 +122,6 @@ PCA9536 gpio4;
 */
 #include <Allegro_A139x_8channel_mux.h> // https://github.com/millerlp/Allegro_A139x_8channel_mux 
 
-
 // NOTE: Use -1 for any pins that don't apply or aren't being used.
 // The Allegro A139x sensors have a SLEEP pin, which wakes the sensor when 
 // pulled high, and puts it to sleep when pulled low. You may choose to connect
@@ -150,14 +149,14 @@ Variable* variableList[] = {
     new ProcessorStats_FreeRam(&mcuBoard),
     new ProcessorStats_Battery(&mcuBoard), 
     new MaximDS3231_Temp(&ds3231),
-    new Hall0_Count(&hallMUX, "02345678-abcd-1234-ef00-1234567890ab"),
-    new Hall1_Count(&hallMUX, "12345678-abcd-1234-ef00-1234567890ab"),
-    new Hall2_Count(&hallMUX, "22345678-abcd-1234-ef00-1234567890ab"),
-    new Hall3_Count(&hallMUX, "32345678-abcd-1234-ef00-1234567890ab"),
-    new Hall4_Count(&hallMUX, "42345678-abcd-1234-ef00-1234567890ab"),
-    new Hall5_Count(&hallMUX, "52345678-abcd-1234-ef00-1234567890ab"),
-    new Hall6_Count(&hallMUX, "62345678-abcd-1234-ef00-1234567890ab"),
-    new Hall7_Count(&hallMUX, "72345678-abcd-1234-ef00-1234567890ab")
+    new Hall0_Count(&hallMUX, ""),
+    new Hall1_Count(&hallMUX, ""),
+    new Hall2_Count(&hallMUX, ""),
+    new Hall3_Count(&hallMUX, ""),
+    new Hall4_Count(&hallMUX, ""),
+    new Hall5_Count(&hallMUX, ""),
+    new Hall6_Count(&hallMUX, ""),
+    new Hall7_Count(&hallMUX, "")
     // Additional sensor variables can be added here, by copying the syntax
     //   for creating the variable pointer (FORM1) from the
     //   `menu_a_la_carte.ino` example
@@ -266,7 +265,7 @@ void setup() {
 }
 
 void loop() {
-
+    // This will loop, logging data at the interval set by loggingInterval above
     dataLogger.logData();
 
 
