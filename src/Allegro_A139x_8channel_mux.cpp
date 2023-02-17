@@ -98,9 +98,9 @@ bool AllegroA139x::setup(void) {
 bool AllegroA139x::addSingleMeasurementResult(void) {
 
     // Initialize values for each sensor channel
-    int32_t sensor_adc = -9999 ;
+    int32_t sensor_adc = -1 ;
     // Initialize an array to hold the 8 channel values
-    int32_t hallVals [8] = {-9999, -9999, -9999, -9999, -9999, -9999, -9999, -9999};
+    int32_t hallVals [8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 
     // Check a measurement was *successfully* started (status bit 6 set)
     // Only go on to get a result if it was 
@@ -141,10 +141,10 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
             // by 4 to get the average of the 4 readings
             rawAnalog = rawAnalog >> 2;   
 
-            // If all values are 0, rewrite rawAnalog to be the -9999 error value
+            // If all values are 0, rewrite rawAnalog to be the -1 error value
             if (0 == rawAnalog) {
                 // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
-                rawAnalog = -9999;
+                rawAnalog = -1;
             }
             MS_DBG(F(" Channel: "), i);
             MS_DBG(F("  Counts:"), sensor_adc);
@@ -160,7 +160,7 @@ bool AllegroA139x::addSingleMeasurementResult(void) {
 
             // if (0 == sensor_adc) {
             //     // Prevent underflow, can never be ALLEGROA139X_ADC_RANGE
-            //     sensor_adc = -9999;
+            //     sensor_adc = -1;
             // }
             // MS_DBG(F(" Channel: "), i);
             // MS_DBG(F("  Counts:"), sensor_adc);
