@@ -223,7 +223,7 @@ void loop() {
     Serial.print(F("\t"));
   Serial.print(F("Hall3: ")); Serial.print(hallMUX.sensorValues[3]);
     Serial.print(F("\t"));
-  Serial.print(F("Hall1: ")); Serial.print(hallMUX.sensorValues[4]);
+  Serial.print(F("Hall4: ")); Serial.print(hallMUX.sensorValues[4]);
     Serial.print(F("\t"));
   Serial.print(F("Hall5: ")); Serial.print(hallMUX.sensorValues[5]);
     Serial.print(F("\t"));
