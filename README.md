@@ -12,6 +12,11 @@ Luke Miller 2023
  
  This library is built to be compatible with the EnviroDIY ModularSensors
  library framework. https://github.com/EnviroDIY/ModularSensors
+
+ Because this library is effectively just routing an analog voltage signal from one of the 8 addresses
+ on the TMUX1208 analog multiplexer to the analog input pin on the Mayfly, you could feed any analog
+ signal (in the 0-3.3V range) to the Mayfly with this library, with or without the use of the sleep lines
+ used to put the A139x Hall sensors in and out of sleep mode. 
  
 
  
